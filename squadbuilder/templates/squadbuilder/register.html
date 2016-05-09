@@ -1,0 +1,34 @@
+{% extends "squadbuilder/header.html" %}
+
+{% block content %}
+
+<form method="POST">{% csrf_token %}
+	
+	<div class="input-group">
+		Username:
+		{{form.username}}
+	</div>
+	<div class="input-group">
+		<br>Password:
+		{{form.password1}}
+	</div>
+		<div class="input-group">
+		<br>Re-enter Password:
+		{{form.password2}}
+	</div>
+	<!--<div class="input-group">
+		<br>Email:
+		<input type="email" name="email" class="form-control" placeholder="Email" aria-describedby="basic-addon1">
+	</div>
+	<div class="input-group">
+		<br>First Name:
+		<input type="text" name="first_name" class="form-control" placeholder="First Name" aria-describedby="basic-addon1">
+	</div>
+	<div class="input-group">
+		<br>Last Name:
+		<input type="text" name="last_name" class="form-control" placeholder="Last Name" aria-describedby="basic-addon1">
+	</div>
+	<br><button type="submit" class="btn btn-default">Submit</button>-->
+	<input type="submit" class="btn btn-default"/>
+</form>
+{% endblock %}	

@@ -1,0 +1,126 @@
+{% extends "squadbuilder/header.html" %}
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+{% block content %}
+
+<script type='text/javascript'>
+var upgrades = {{ upgrades|safe }};
+var pilotCost = {{pilotCost|safe}};
+</script>
+	{{pilotCost}}
+  <ul class="nav nav-tabs" role="tablist" id="mytabs">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Rebel</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Empire</a></li>
+    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Scum</a></li>
+  </ul>
+  
+  <div class="tab-content">
+	<div role="tabpanel" class="tab-pane active" id="home">
+	{% for item in ships%}
+	{% if item.1.1.faction == "Rebels"%}
+	  <div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="headingOne">
+		  <h4 class="panel-title">
+			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{item.0}}" aria-expanded="false" aria-controls="collapse{{item.0}}">
+			  {{item.0}}
+			</a>
+		  </h4>
+		</div>
+	
+		<div id="collapse{{item.0}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+			{% for pilot in item.1 %}
+			{% if pilot.faction == "Rebels" %}
+				<div class="list-group">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot}}" name="{{pilot.name}}" aria-label="...">{{pilot.name}}-{{pilot.pilotCost}}</input>
+						</label>
+					</div>
+				</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+
+	  </div>
+	{% endif %}
+	{% endfor %}
+	</div>
+	<div role="tabpanel" class="tab-pane" id="profile">
+		{% for item in ships%}
+	{% if item.1.1.faction == "Empire"%}
+	  <div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="headingOne">
+		  <h4 class="panel-title">
+			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{item.0}}" aria-expanded="false" aria-controls="collapse{{item.0}}">
+			  {{item.0}}
+			</a>
+		  </h4>
+		</div>
+	
+		<div id="collapse{{item.0}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+			{% for pilot in item.1 %}
+			{% if pilot.faction == "Empire" %}
+				<div class="list-group">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot}}" name="{{pilot.name}}" aria-label="...">{{pilot.name}}-{{pilot.pilotCost}}</input>
+						</label>
+					</div>
+				</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+
+	  </div>
+	{% endif %}
+	{% endfor %}
+	</div>
+	<div role="tabpanel" class="tab-pane" id="messages">
+		{% for item in ships%}
+	{% if item.1.1.faction == "Scum"%}
+	  <div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="headingOne">
+		  <h4 class="panel-title">
+			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{item.0}}" aria-expanded="false" aria-controls="collapse{{item.0}}">
+			  {{item.0}}
+			</a>
+		  </h4>
+		</div>
+	
+		<div id="collapse{{item.0}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+			{% for pilot in item.1 %}
+			{% if pilot.faction == "Scum" %}
+				<div class="list-group">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot}}" name="{{pilot.name}}"  aria-label="...">{{pilot.name}}-{{pilot.pilotCost}}</input>
+						</label>
+					</div>
+				</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+
+	  </div>
+	{% endif %}
+	{% endfor %}
+	</div>
+  </div>
+	
+	<div class="panel panel-primary">
+		<div class="panel-heading" style="font-size:20px"><center>Your Squad <p id="cost"></p></center></div>
+		<div class="panel-body" id="squad"></div>
+	</div>	
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      Testing
+    </div>
+  </div>
+</div>
+{% endblock %}
+

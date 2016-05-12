@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes
+from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
@@ -23,6 +23,7 @@ def squadbuilder(request):
     shipList =[]
     upgradeList={}
     pilotCostDict={}
+    upgradeCardDict={}
     for item in ships:
         pilots = Pilots.objects.filter(ship=item)
         shipList.append((item.name,pilots))
@@ -34,8 +35,16 @@ def squadbuilder(request):
                 upgrades.append(upgrade[0])    
             upgradeList[pilotID]=upgrades
             pilotCostDict[pilotID]=pilot.pilotCost
+    types=list(UpgradeTypes.objects.all().values_list('name'))
+    for upgradeType in types:
+        placeHolderDict={}
+        placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost'))
+        for item in placeHolder:
+            placeHolderDict[item[0]]={'cost':item[1]}
+        upgradeCardDict[upgradeType[0]]=placeHolderDict
     return render(request, 'squadbuilder/builder.html',{'ships':shipList,'upgrades':json.dumps(upgradeList),
-                                                        'pilotCost':json.dumps(pilotCostDict)})
+                                                        'pilotCost':json.dumps(pilotCostDict),
+                                                        'cards':json.dumps(upgradeCardDict)})
 
 
 @csrf_protect

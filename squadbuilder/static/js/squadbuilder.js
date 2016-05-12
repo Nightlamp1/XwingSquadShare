@@ -16,6 +16,8 @@ $("#mytabs").click(function (e){
 	console.log("made it into mytabs");
 	$("input:checkbox").prop('checked', false);
 	$("#squad").empty();
+	cost = 0;
+	updateCostDisplay(cost);
 });
 $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events
@@ -23,7 +25,11 @@ $(".pilotCheckbox").change(function() {
 	var htmlString = "";
 	
 	for (i=0; i<upgrades[this.id].length; i++){
-	htmlString += ("<button type='button' class='btn btn-default'>" + upgrades[this.id][i] + "</button>");
+	htmlString += (
+	"<span class='dropdown'>"+
+		"<button type='button' class='btn btn-default dropdown-toggle' id='test' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
+		"<ul class='dropdown-menu' aria-labelledby='test'><li>Test1</li><li>Test2</li></ul>"+
+	"</span>");
 	}
 	
 	$("#squad").append("<div class=" + this.id + ">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=209px width=150px>' + htmlString + "</div>");

@@ -47,6 +47,14 @@ $(document).ready(function() {
 		
 
 	  } else {
+		for (i=0; i<upgrades[this.id].length; i++){
+			console.log(upgrades[this.id][i]+this.id);
+			var upgradeCost = $("."+upgrades[this.id][i]+this.id).data("cost");
+			if (upgradeCost != null){
+				cost-=upgradeCost;
+			}
+			
+		}
 		$("div." +this.id).last().remove();
 		cost-=pilotCost[this.id];
 		updateCostDisplay(cost);
@@ -89,7 +97,7 @@ $(document).ready(function() {
 		}
 		
 		
-		console.log(upgradeCost);
+		
 	});
 });
 

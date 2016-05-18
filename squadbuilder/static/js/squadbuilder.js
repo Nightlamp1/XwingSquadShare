@@ -64,6 +64,9 @@ $(document).ready(function() {
 		if(selectedUpgrade=="None"){
 			console.log("made it into none");
 			upgradeCost=$("."+upgradeType+pilot).data("cost");
+			if(upgradeCost == null){
+				upgradeCost=0;
+			}
 			$("."+upgradeType+pilot).remove();
 			updateCostDisplay(cost-=upgradeCost);
 			

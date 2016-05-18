@@ -2,7 +2,7 @@ from django.shortcuts import render
 from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect
@@ -46,7 +46,7 @@ def squadbuilder(request):
                                                         'pilotCost':json.dumps(pilotCostDict),
                                                         'cards':json.dumps(upgradeCardDict)})
 
-
+#Break out into seperate app?
 @csrf_protect
 def register(request):
     if request.method == 'POST':
@@ -62,7 +62,8 @@ def register(request):
         c.update(csrf(request))
         c['form'] = form
         return render(request, 'squadbuilder/register.html',c)
-
+    
+#Break out into seperate app?
 @csrf_protect
 def loginview(request):
     if request.method == 'POST':
@@ -81,3 +82,7 @@ def loginview(request):
         c={}
         c.update(csrf(request))
         return render(request, 'squadbuilder/login.html',c)
+
+def logoutview(request):
+    logout(request)
+    return HttpResponseRedirect('/')

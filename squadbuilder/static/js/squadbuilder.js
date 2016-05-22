@@ -104,3 +104,14 @@ $(document).ready(function() {
 function updateCostDisplay(newvalue){
 	$("#cost").text(newvalue+"/100");
 }
+
+$('select').on('change',function(){
+	console.log("something changed");
+	var numOfExpansions = $(".expansion-qty").length;
+	var expansionQtyList = [];
+	for(i=1;i<=numOfExpansions;i++){
+		expansionQtyList+=$("#"+i+"select option:selected").text();
+	}
+	console.log(expansionQtyList);
+	$('input[name="expansionCode"]').val(expansionQtyList);
+});

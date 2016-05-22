@@ -1,0 +1,42 @@
+{% extends "squadbuilder/header.html" %}
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+{% block content %}
+
+<div class="panel panel-default">
+	<div class="panel-heading" role="tab" id="headingOne">
+	  <h4 class="panel-title">
+		<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsetest" aria-expanded="false" aria-controls="collapsetest">
+		  Select Expansions
+		</a>
+	  </h4>
+</div>
+<div id="collapsetest" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+	{% for expansion in expansions %}
+	
+		<div class="list-group" style="position:relative">
+			<div class="btn-group" data-toggle="buttons">
+				<label >
+					<span style="float:left">{{expansion.name}}:</span>
+					<span class="form-group-sm" style="float:right">
+					  <select class="expansion-qty" id="{{expansion.id}}select">
+					    <option value="0">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					  </select>
+					</span>
+				</label>
+			</div>
+		</div>
+	
+	{% endfor %}
+	<input type="hidden" name="expansionCode" value="">
+	<button class="btn btn-primary btn-sm" type="submit" onclick="expansionListBuilder()">Update</button>
+</div>
+</div>
+
+{% endblock %}

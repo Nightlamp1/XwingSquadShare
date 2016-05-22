@@ -44,7 +44,8 @@ def squadbuilder(request):
         upgradeCardDict[upgradeType[0]]=placeHolderDict
     return render(request, 'squadbuilder/builder.html',{'ships':shipList,'upgrades':json.dumps(upgradeList),
                                                         'pilotCost':json.dumps(pilotCostDict),
-                                                        'cards':json.dumps(upgradeCardDict)})
+                                                        'cards':json.dumps(upgradeCardDict),
+                                                        'expansions':exps})
 
 #Break out into seperate app?
 @csrf_protect
@@ -86,3 +87,8 @@ def loginview(request):
 def logoutview(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def selector(request):
+    exps = Expansions.objects.all()#will need to be owned expansions
+    return render(request, 'squadbuilder/selector.html',{'expansions':exps})
+    

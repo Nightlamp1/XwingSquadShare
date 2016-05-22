@@ -34,8 +34,12 @@
 		</div>
 	
 	{% endfor %}
+	
+	<form method="POST">{% csrf_token %}
 	<input type="hidden" name="expansionCode" value="">
-	<button class="btn btn-primary btn-sm" type="submit" onclick="expansionListBuilder()">Update</button>
+	<button class="btn btn-primary btn-sm" type="submit">Let's Build!</button>
+	</form>
+	
 </div>
 </div>
 

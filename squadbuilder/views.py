@@ -3,7 +3,7 @@ from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeT
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect
 from squadbuilder.forms import LoginForm
@@ -18,34 +18,44 @@ def contact(request):
     return render(request, 'squadbuilder/basic.html',{'content':['If you would like to contact me:',
                                                              'robert.britt2011@gmail.com']})
 def squadbuilder(request):
-    ships = Ships.objects.all()
-    exps = Expansions.objects.all()#will need to be owned expansions
-    shipList =[]
-    upgradeList={}
-    pilotCostDict={}
-    upgradeCardDict={}
-    for item in ships:
-        pilots = Pilots.objects.filter(ship=item)
-        shipList.append((item.name,pilots))
-        for pilot in pilots:
-            upgrades=[]
-            pilotID=pilot.name.replace(" ","")
-            upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
-            for upgrade in upgrade_query:
-                upgrades.append(upgrade[0])    
-            upgradeList[pilotID]=upgrades
-            pilotCostDict[pilotID]=pilot.pilotCost
-    types=list(UpgradeTypes.objects.all().values_list('name'))
-    for upgradeType in types:
-        placeHolderDict={}
-        placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost'))
-        for item in placeHolder:
-            placeHolderDict[item[0]]={'cost':item[1]}
-        upgradeCardDict[upgradeType[0]]=placeHolderDict
-    return render(request, 'squadbuilder/builder.html',{'ships':shipList,'upgrades':json.dumps(upgradeList),
-                                                        'pilotCost':json.dumps(pilotCostDict),
-                                                        'cards':json.dumps(upgradeCardDict),
-                                                        'expansions':exps})
+    if request.method == 'POST':
+        selected_expansions=request.POST['expansionCode']
+        ships = []
+        shipList =[]
+        upgradeList={}
+        pilotCostDict={}
+        upgradeCardDict={}
+        for index, quantity in enumerate(selected_expansions):
+            if int(quantity) > 0:
+                ship_query = Ships.objects.all().filter(expansion=(index+1))
+                for ship in ship_query:
+                    ships.append(ship)
+                    pilots = Pilots.objects.filter(ship=ship, expansion=(index+1))
+                    shipList.append((ship.name,pilots))
+                    for pilot in pilots:
+                        upgrades=[]
+                        pilotID=pilot.name.replace(" ","")
+                        upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
+                        for upgrade in upgrade_query:
+                            upgrades.append(upgrade[0])    
+                            upgradeList[pilotID]=upgrades
+                            pilotCostDict[pilotID]=pilot.pilotCost
+
+        #need to revisit to apply filter by expansion
+        types=list(UpgradeTypes.objects.all().values_list('name'))
+        for upgradeType in types:
+            placeHolderDict={}
+            placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost'))
+            for item in placeHolder:
+                 placeHolderDict[item[0]]={'cost':item[1]}
+            upgradeCardDict[upgradeType[0]]=placeHolderDict
+        return render(request, 'squadbuilder/builder.html',{'ships':shipList,'upgrades':json.dumps(upgradeList),
+                                                            'pilotCost':json.dumps(pilotCostDict),
+                                                            'cards':json.dumps(upgradeCardDict)})
+    else:
+        exps = Expansions.objects.all()#will need to be owned expansions
+        return render(request, 'squadbuilder/selector.html',{'expansions':exps})
+        
 
 #Break out into seperate app?
 @csrf_protect
@@ -88,7 +98,6 @@ def logoutview(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-def selector(request):
-    exps = Expansions.objects.all()#will need to be owned expansions
-    return render(request, 'squadbuilder/selector.html',{'expansions':exps})
+ 
+        
     

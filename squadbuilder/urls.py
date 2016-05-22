@@ -10,5 +10,4 @@ urlpatterns = [
     url(r'^register', views.register, name='register'),
     url(r'^login', views.loginview, name='login'),
     url(r'^logout', views.logoutview, name='logout'),
-    url(r'^squadbuilder/selector', views.selector, name='selector')
 ]

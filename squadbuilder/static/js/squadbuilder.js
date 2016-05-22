@@ -112,6 +112,5 @@ $('select').on('change',function(){
 	for(i=1;i<=numOfExpansions;i++){
 		expansionQtyList+=$("#"+i+"select option:selected").text();
 	}
-	console.log(expansionQtyList);
 	$('input[name="expansionCode"]').val(expansionQtyList);
 });

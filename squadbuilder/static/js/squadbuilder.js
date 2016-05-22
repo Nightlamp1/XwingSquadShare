@@ -104,3 +104,51 @@ $(document).ready(function() {
 function updateCostDisplay(newvalue){
 	$("#cost").text(newvalue+"/100");
 }
+
+function expansionListBuilder(){
+	console.log("made it into testing function");
+	var numOfExpansions = $(".expansion-qty").length;
+	var expansionQtyDict = {};
+	for(i=1;i<=numOfExpansions;i++){
+		expansionQtyDict[i]=$("#" + i + "select option:selected").text();
+		console.log(expansionQtyDict);
+	}
+	var csrftoken = getCookie('csrftoken');
+
+	$.ajax({
+		url: "/",
+		type:"POST",
+		data: { expansionData : expansionQtyDict,
+				csrfmiddlewaretoken : csrftoken
+		},
+		
+		success : function(a,b,c,d,e,f){
+			console.log("it worked?");
+			console.log(a);
+			console.log(b);
+			console.log(c);
+			console.log(d);
+			
+		},
+		
+		error : function(){
+			console.log("it did not work");
+		}
+	})
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

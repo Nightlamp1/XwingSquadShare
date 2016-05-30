@@ -1,12 +1,5 @@
 from django.shortcuts import render
 from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.template.context_processors import csrf
-from django.http import HttpResponseRedirect
-from squadbuilder.forms import LoginForm
 import json
 
 
@@ -32,7 +25,7 @@ def squadbuilder(request):
                     for pilot in pilots:
                         upgrades=[]
                         pilotID=pilot.name.replace(" ","")
-                        all_pilots.append({'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
+                        all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
                         upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
                         for upgrade in upgrade_query:
                             upgrades.append(upgrade[0])    
@@ -55,9 +48,9 @@ def squadbuilder(request):
         types=list(UpgradeTypes.objects.all().values_list('name'))
         for upgradeType in types:
             placeHolderDict={}
-            placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost'))
+            placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost','id'))
             for item in placeHolder:
-                 placeHolderDict[item[0]]={'cost':item[1]}
+                 placeHolderDict[item[0]]={'cost':item[1],'code':item[2]}
             upgradeCardDict[upgradeType[0]]=placeHolderDict
         return render(request, 'squadbuilder/builder.html',{'ships':available_ships,'upgrades':json.dumps(upgradeList),
                                                             'pilotCost':json.dumps(pilotCostDict),

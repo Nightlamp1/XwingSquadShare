@@ -40,7 +40,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="{{pilot.name}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
 						</label>
 					</div>
 				</div>
@@ -71,7 +71,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="{{pilot.name}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
 						</label>
 					</div>
 				</div>
@@ -102,7 +102,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="{{pilot.name}}"  aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}"  aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
 						</label>
 					</div>
 				</div>
@@ -119,6 +119,7 @@ var upgradeCardList = {{cards|safe}};
 	<div class="panel panel-primary">
 		<div class="panel-heading" style="font-size:20px"><center>Your Squad <p id="cost"></p></center></div>
 		<div class="panel-body" id="squad"></div>
+		<center><button id="savesquad" type="button" class="btn btn-success">Save Squad</button></center>
 	</div>	
 </div>
 

@@ -34,7 +34,7 @@ $(".pilotCheckbox").change(function() {
 	
 	}
 	
-	$("#squad").append("<div class=" + this.id + ">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + htmlString + "</div>");
+	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + htmlString + "</div>");
 	cost+=pilotCost[this.id];
 	updateCostDisplay(cost);
 	
@@ -47,7 +47,7 @@ $(".pilotCheckbox").change(function() {
 		}
 		
 	}
-	$("div." +this.id).last().remove();
+	$("div#" +this.id).last().remove();
 	cost-=pilotCost[this.id];
 	updateCostDisplay(cost);
   }
@@ -65,7 +65,7 @@ $("#mytabs").click(function (e){
 $(document.body).on('click','.upgrade',function(){
 	
 	var selectedUpgrade=$(this).text().replace(/\s/g,"");
-	var pilot=$(this).closest('div').attr('class');
+	var pilot=$(this).closest('div').attr('id');
 	var upgradeType = $(this).attr('id');
 	var upgradeCost=0;
 	
@@ -80,7 +80,9 @@ $(document.body).on('click','.upgrade',function(){
 	}
 	else if($("."+upgradeType+pilot).length==0){
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
-		$("."+pilot).append('<span class=' + upgradeType + pilot + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
+		console.log(pilot);
+		$("div#"+pilot).append('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$("."+upgradeType+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
@@ -90,14 +92,22 @@ $(document.body).on('click','.upgrade',function(){
 		$("."+upgradeType+pilot).remove();
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
-		$("."+pilot).append('<span class=' + upgradeType + pilot + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
+		$("div#"+pilot).append('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$("."+upgradeType+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
 });
 
 function updateCostDisplay(newvalue){
-	$("#cost").text(newvalue+"/100");
+	if(newvalue <= 100){
+		$("#cost").css('color','white');
+		$("#cost").text(newvalue+"/100");
+	}
+	else{
+		$("#cost").css('color','red');
+		$("#cost").text(newvalue+"/100");
+	}
 }
 
 //Currently function requires correct auto increment of mysqldb any skips in incrementation will break this logic
@@ -108,4 +118,20 @@ $('select').on('change',function(){
 		expansionQtyList+=$("#"+i+"select option:selected").text();
 	}
 	$('input[name="expansionCode"]').val(expansionQtyList);
+});
+
+$('#savesquad').click(function(){
+	console.log("button click working");
+	var numOfPilots = $(".pilot").length;
+	var squadcode = "";
+	var arrr = [];
+	//var arr = $(".pilot").map(function(){
+	//	return $(this).attr('name');
+	//}).get().join();
+	$(".pilot").each(function(){
+		arrr+=$(this).attr('name');
+	});
+	console.log(arrr);
+
+	console.log(numOfPilots);
 });

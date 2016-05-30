@@ -23,6 +23,7 @@ def squadbuilder(request):
         ships = []
         available_ships =[]
         available_pilots =[]
+        all_pilots=[]
         upgradeList={}
         pilotCostDict={}
         upgradeCardDict={}
@@ -35,7 +36,7 @@ def squadbuilder(request):
                     for pilot in pilots:
                         upgrades=[]
                         pilotID=pilot.name.replace(" ","")
-                        available_pilots.append({'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
+                        all_pilots.append({'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
                         upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
                         for upgrade in upgrade_query:
                             upgrades.append(upgrade[0])    
@@ -47,6 +48,12 @@ def squadbuilder(request):
                 pass #add quantity addition here
             else:
                 available_ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity})
+
+        for pilot in all_pilots:
+            if any(d['name']==pilot['name'] for d in available_pilots):
+                pass #add quantity addition here
+            else:
+                available_pilots.append(pilot)
             
         #need to revisit to apply filter by expansion
         types=list(UpgradeTypes.objects.all().values_list('name'))

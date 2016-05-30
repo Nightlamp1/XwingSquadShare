@@ -11,12 +11,8 @@ import json
 
 
 # Create your views here.
-def index(request):
-    return render(request, 'squadbuilder/home.html')
 
-def contact(request):
-    return render(request, 'squadbuilder/basic.html',{'content':['If you would like to contact me:',
-                                                             'robert.britt2011@gmail.com']})
+
 def squadbuilder(request):
     if request.method == 'POST':
         selected_expansions=request.POST['expansionCode']
@@ -72,46 +68,7 @@ def squadbuilder(request):
         return render(request, 'squadbuilder/selector.html',{'expansions':exps})
         
 
-#Break out into seperate app?
-@csrf_protect
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/squadbuilder/home.html')
-        else:
-            return render(request, 'squadbuilder/basic.html', {'content':["Failed Registration"]})
-    else:
-        form = UserCreationForm()
-        c={}
-        c.update(csrf(request))
-        c['form'] = form
-        return render(request, 'squadbuilder/register.html',c)
-    
-#Break out into seperate app?
-@csrf_protect
-def loginview(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username,password=password)
-        if user is not None:
-            if user.is_active:
-                login(request,user)
-                return render(request, 'squadbuilder/basic.html', {'content':["Login successful"]})
-            else:
-                return render(request, 'squadbuilder/basic.html', {'content':["Failed Login"]})
-        else:
-            return render(request, 'squadbuilder/basic.html', {'content':["failed login"]})
-    else:
-        c={}
-        c.update(csrf(request))
-        return render(request, 'squadbuilder/login.html',c)
 
-def logoutview(request):
-    logout(request)
-    return HttpResponseRedirect('/')
 
  
         

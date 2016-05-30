@@ -21,7 +21,8 @@ def squadbuilder(request):
     if request.method == 'POST':
         selected_expansions=request.POST['expansionCode']
         ships = []
-        shipList =[]
+        available_ships =[]
+        available_pilots =[]
         upgradeList={}
         pilotCostDict={}
         upgradeCardDict={}
@@ -31,16 +32,22 @@ def squadbuilder(request):
                 for ship in ship_query:
                     ships.append(ship)
                     pilots = Pilots.objects.filter(ship=ship, expansion=(index+1))
-                    shipList.append((ship.name,pilots))
                     for pilot in pilots:
                         upgrades=[]
                         pilotID=pilot.name.replace(" ","")
+                        available_pilots.append({'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
                         upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
                         for upgrade in upgrade_query:
                             upgrades.append(upgrade[0])    
                             upgradeList[pilotID]=upgrades
                             pilotCostDict[pilotID]=pilot.pilotCost
 
+        for ship in ships:
+            if any(d['name']==ship.name for d in available_ships):
+                pass #add quantity addition here
+            else:
+                available_ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity})
+            
         #need to revisit to apply filter by expansion
         types=list(UpgradeTypes.objects.all().values_list('name'))
         for upgradeType in types:
@@ -49,9 +56,10 @@ def squadbuilder(request):
             for item in placeHolder:
                  placeHolderDict[item[0]]={'cost':item[1]}
             upgradeCardDict[upgradeType[0]]=placeHolderDict
-        return render(request, 'squadbuilder/builder.html',{'ships':shipList,'upgrades':json.dumps(upgradeList),
+        return render(request, 'squadbuilder/builder.html',{'ships':available_ships,'upgrades':json.dumps(upgradeList),
                                                             'pilotCost':json.dumps(pilotCostDict),
-                                                            'cards':json.dumps(upgradeCardDict)})
+                                                            'cards':json.dumps(upgradeCardDict),
+                                                            'pilots':available_pilots})
     else:
         exps = Expansions.objects.all()#will need to be owned expansions
         return render(request, 'squadbuilder/selector.html',{'expansions':exps})

@@ -105,6 +105,7 @@ function updateCostDisplay(newvalue){
 	$("#cost").text(newvalue+"/100");
 }
 
+//Currently function requires correct auto increment of mysqldb any skips in incrementation will break this logic
 $('select').on('change',function(){
 	console.log("something changed");
 	var numOfExpansions = $(".expansion-qty").length;

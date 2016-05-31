@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -6,10 +7,12 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect
 from squadbuilder.forms import LoginForm
+from squadshare.models import SavedSquads
 
 # Create your views here.
 def index(request):
-    return render(request, 'squadshare/home.html')
+    recent_squads = SavedSquads.objects.all().order_by('createdDate')[:5]
+    return render(request, 'squadshare/home.html', {'recent_squads':recent_squads})
 
 def contact(request):
     return render(request, 'squadshare/basic.html',{'content':['If you would like to contact me:',
@@ -22,7 +25,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/squadshare/home.html')
+            return render(request,'squadshare/basic.html',{'content':["Registration Successful"]})
         else:
             return render(request, 'squadshare/basic.html', {'content':["Failed Registration"]})
     else:
@@ -56,5 +59,8 @@ def logoutview(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-def squadviewer(request):
-        return render(request, 'squadshare/squadviewer.html', {'squadcode':squadcode})
+@login_required
+def profile(request, username):
+        user = User.objects.get(username=username)
+        user_squads = SavedSquads.objects.filter(user=user)
+        return render(request, 'squadshare/profile.html', {'user_squads':user_squads})

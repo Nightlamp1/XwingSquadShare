@@ -8,4 +8,26 @@
 <p>Thanks for visiting Rob's X-wing Site! This site is currently under construction
 but we are hoping to be open for business soon!</p>
 
+
+<div class="panel panel-info">
+	<div class="panel-heading">
+		<h3 class="panel-title">Recent Squads</h3>
+	</div>
+	<div class="panel-body">
+		{% for squad in recent_squads %}
+			<p>{{squad.name}}--{{squad.id}}--{{squad.user}}--{{squad.createdDate}}</p>
+		{% endfor %}
+	</div>
+</div>
+
+<div class="panel panel-info">
+	<div class="panel-heading">
+		<h3 class="panel-title">Hot Squads</h3>
+	</div>
+	<div class="panel-body">
+		{% for squad in recent_squads %}
+			<p>{{squad.name}}--{{squad.id}}--{{squad.user}}--{{squad.createdDate}}</p>
+		{% endfor %}
+	</div>
+</div>
 {% endblock %}	

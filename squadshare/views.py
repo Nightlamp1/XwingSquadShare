@@ -12,7 +12,7 @@ def index(request):
     return render(request, 'squadshare/home.html')
 
 def contact(request):
-    return render(request, 'squadbuilder/basic.html',{'content':['If you would like to contact me:',
+    return render(request, 'squadshare/basic.html',{'content':['If you would like to contact me:',
                                                              'robert.britt2011@gmail.com']})
 
 #Break out into seperate app?
@@ -22,15 +22,15 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/squadbuilder/home.html')
+            return HttpResponseRedirect('/squadshare/home.html')
         else:
-            return render(request, 'squadbuilder/basic.html', {'content':["Failed Registration"]})
+            return render(request, 'squadshare/basic.html', {'content':["Failed Registration"]})
     else:
         form = UserCreationForm()
         c={}
         c.update(csrf(request))
         c['form'] = form
-        return render(request, 'squadbuilder/register.html',c)
+        return render(request, 'squadshare/register.html',c)
     
 #Break out into seperate app?
 @csrf_protect
@@ -42,16 +42,19 @@ def loginview(request):
         if user is not None:
             if user.is_active:
                 login(request,user)
-                return render(request, 'squadbuilder/basic.html', {'content':["Login successful"]})
+                return render(request, 'squadshare/basic.html', {'content':["Login successful"]})
             else:
-                return render(request, 'squadbuilder/basic.html', {'content':["Failed Login"]})
+                return render(request, 'squadshare/basic.html', {'content':["Failed Login"]})
         else:
-            return render(request, 'squadbuilder/basic.html', {'content':["failed login"]})
+            return render(request, 'squadshare/basic.html', {'content':["failed login"]})
     else:
         c={}
         c.update(csrf(request))
-        return render(request, 'squadbuilder/login.html',c)
+        return render(request, 'squadshare/login.html',c)
 
 def logoutview(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def squadviewer(request):
+        return render(request, 'squadshare/squadviewer.html', {'squadcode':squadcode})

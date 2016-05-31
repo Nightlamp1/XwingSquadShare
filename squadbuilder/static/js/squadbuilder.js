@@ -124,9 +124,6 @@ $('#savesquad').click(function(){
 	console.log("button click working");
 	var numOfPilots = $(".pilot").length;
 	var squadcode = "";
-	//var arr = $(".pilot").map(function(){
-	//	return $(this).attr('name');
-	//}).get().join();
 	$(".pilot").each(function(){
 		squadcode+=$(this).attr('name');
 		$(this).children("span").each(function(){
@@ -136,6 +133,6 @@ $('#savesquad').click(function(){
 		});
 	});
 	console.log(squadcode);
-
+	$('input[name="squadcode"]').val(squadcode);
 	console.log(numOfPilots);
 });

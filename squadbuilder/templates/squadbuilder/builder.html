@@ -119,8 +119,32 @@ var upgradeCardList = {{cards|safe}};
 	<div class="panel panel-primary">
 		<div class="panel-heading" style="font-size:20px"><center>Your Squad <p id="cost"></p></center></div>
 		<div class="panel-body" id="squad"></div>
-		<center><button id="savesquad" type="button" class="btn btn-success">Save Squad</button></center>
+		<form method="POST">{% csrf_token %}
+		<input type="hidden" name="squadcode" value="">
+		<center><button id="savesquad" type="button" class="btn btn-success" data-toggle="modal" data-target=".mymodal">Save Squad</button></center>
+		</form>
 	</div>	
+</div>
+
+<div class="modal fade mymodal" tabindex="-1" role="dialog" aria-labelledby="test">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title" id="myModalLabel">Please enter a name for your squad:</h4>
+		</div>
+		
+		{% if user.is_authenticated %}
+		<form method="POST">{% csrf_token %}
+			<input type="hidden" name="squadcode" value="">
+			<br><h4>Enter Squad Name:</h4>
+			<input type="text" class="form-control" name="squadname" placeholder="Squad Name" aria-describedby="basic-addon1"><br>
+			<center><button id="finalsave" type="submit" class="btn btn-success">Save Squad</button></center>
+		</form>
+		{% else %}
+		<h3>Sorry you must be logged in to save squads</h3>
+		{% endif %}
+    </div>
+  </div>
 </div>
 
 

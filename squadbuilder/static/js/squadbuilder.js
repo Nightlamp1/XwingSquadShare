@@ -124,14 +124,18 @@ $('#savesquad').click(function(){
 	console.log("button click working");
 	var numOfPilots = $(".pilot").length;
 	var squadcode = "";
-	var arrr = [];
 	//var arr = $(".pilot").map(function(){
 	//	return $(this).attr('name');
 	//}).get().join();
 	$(".pilot").each(function(){
-		arrr+=$(this).attr('name');
+		squadcode+=$(this).attr('name');
+		$(this).children("span").each(function(){
+			if($(this).attr('class')!='dropdown'){
+				squadcode+=$(this).attr('name');
+			}
+		});
 	});
-	console.log(arrr);
+	console.log(squadcode);
 
 	console.log(numOfPilots);
 });

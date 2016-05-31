@@ -59,7 +59,7 @@ def logoutview(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-@login_required
+
 def profile(request, username):
         user = User.objects.get(username=username)
         user_squads = SavedSquads.objects.filter(user=user)

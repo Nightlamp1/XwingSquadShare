@@ -8,6 +8,7 @@
 <p>Thanks for visiting Rob's X-wing Site! This site is currently under construction
 but we are hoping to be open for business soon!</p>
 
+{{squad_list}}
 
 <div class="panel panel-info">
 	<div class="panel-heading">
@@ -26,7 +27,25 @@ but we are hoping to be open for business soon!</p>
 	</div>
 	<div class="panel-body">
 		{% for squad in recent_squads %}
-			<p>{{squad.name}}--{{squad.id}}--{{squad.user}}--{{squad.createdDate}}</p>
+			<button type="button" class="btn btn-default">
+				<span class="glyphicon glyphicon-thumbs-up"> {{squad.upvotes}}</span>
+			</button>
+			<h4>{{squad.name}}</h4>
+			<h6>Created on: {{squad.createdDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By: {{squad.user}}</h6>
+			<div>
+				{% for item in squad_list %}
+				{% if item.name == squad.name %}
+					{% for pilot in item.list%}
+					<p><strong>{{pilot.0}}</strong>
+						{% for upgrade in pilot.1 %}
+							-{{upgrade}}
+						{% endfor %}
+					</p>
+					{% endfor %}
+				{% endif %}
+				{% endfor %}
+			</div>
+			
 		{% endfor %}
 	</div>
 </div>

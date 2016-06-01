@@ -12,4 +12,5 @@ class SavedSquads(models.Model):
     isPublic = models.BooleanField(default=True)
     createdDate = models.DateField(default=date.today)
     user = models.ForeignKey(User)
+    upvotes = models.IntegerField()
     

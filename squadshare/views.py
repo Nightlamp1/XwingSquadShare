@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect
 from squadbuilder.forms import LoginForm
-from squadshare.models import SavedSquads
+from squadshare.models import SavedSquads, SquadComments
 from squadbuilder.models import Pilots, Upgrades
 
 # Create your views here.
@@ -96,8 +96,6 @@ def profile(request, username):
         return render(request, 'squadshare/profile.html', {'user_squads':user_squads})
 
 def squad(request, squadcode):
-    squad_code = squadcode
-    squad=SavedSquads.objects.all().filter(id=squad_code)
 
     def squadReader(squad_query):
         squad_readout = []
@@ -108,7 +106,7 @@ def squad(request, squadcode):
             squadcode = squadcode.split('p')
             for item in squadcode:
                 if item == "":
-                     pass
+                        pass
                 else:
                     query_array.append(item.split('u'))
             for query in query_array:
@@ -125,7 +123,23 @@ def squad(request, squadcode):
                 pilot_list.append(pilot_dict)
             squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode})
         return squad_readout
-
-    squad_list = squadReader(squad)
     
-    return render(request, 'squadshare/squad.html',{'squad':squad_list})
+    if request.method == 'POST':
+        comment = request.POST['comment']
+        user = request.user
+        squadcode = request.POST['squadcode']
+        squad = SavedSquads.objects.get(squadcode=squadcode)
+        comments = SquadComments.objects.all().filter(squad=squad)
+        entry = SquadComments(comment=comment, user=user, squad=squad)
+        entry.save()
+        squad_query = SavedSquads.objects.all().filter(squadcode=squadcode)
+        squad_list = squadReader(squad_query)
+        return render(request, 'squadshare/squad.html',{'squad':squad_list,'comments':comments})
+
+
+    else:
+        squad_code = squadcode
+        squad=SavedSquads.objects.all().filter(id=squad_code)
+        squad_list = squadReader(squad)
+        comments = SquadComments.objects.all().filter(squad=squad_code)
+        return render(request, 'squadshare/squad.html',{'squad':squad_list, 'comments':comments})

@@ -14,3 +14,7 @@ class SavedSquads(models.Model):
     user = models.ForeignKey(User)
     upvotes = models.IntegerField()
     
+class SquadComments(models.Model):
+    comment = models.CharField(max_length=400)
+    squad = models.ForeignKey(SavedSquads)
+    user = models.ForeignKey(User)

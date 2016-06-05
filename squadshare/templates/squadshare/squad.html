@@ -3,21 +3,38 @@
 
 {% block content %}
 	
-	<h3>{{squad.0.name}}</h3>
-	
-	<br>
-	
-	{% for squad in squad %}
-	
-		{% for pilot in squad.list %}
-			<img src="/static/img/Pilots/{{pilot.0}}.jpg" height=259px width=200px>
-			{% for upgrade in pilot.1 %}
-				<img src="/static/img/Upgrades/{{upgrade}}.jpg" height=209px width=150px>
-			{% endfor %}
-			<br><br>
-		{% endfor %}
-	
-	
-	{% endfor %}
 
+
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title">{{squad.0.name}}</h3>
+		</div>
+		<div class="panel-body">
+		{% for squad in squad %}
+		
+			{% for pilot in squad.list %}
+				<img src="/static/img/Pilots/{{pilot.0}}.jpg" height=259px width=200px>
+				{% for upgrade in pilot.1 %}
+					<img src="/static/img/Upgrades/{{upgrade}}.jpg" height=209px width=150px>
+				{% endfor %}
+				<br><br>
+			{% endfor %}
+		
+		
+		{% endfor %}
+		</div>
+	</div>
+	
+	<p> Comments </p>
+	{% for comment in comments %}
+		<p>{{comment.comment}}</p>
+	{% endfor %}
+	
+	{% if user.is_authenticated%}
+	<form method="POST">{% csrf_token %}
+		<textarea rows="5" cols="50" name="comment">Enter a comment...</textarea><br>
+		<input type="hidden" name="squadcode" value="{{squad.0.squadcode}}">
+	<button class="btn btn-primary btn-sm" type="submit">Submit Comment</button>
+	</form>
+	{% endif %}
 {% endblock %}	

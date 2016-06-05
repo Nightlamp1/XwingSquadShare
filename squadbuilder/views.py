@@ -13,7 +13,7 @@ def squadbuilder(request):
         if squadcode!="":
             squadname = request.POST.get('squadname',"Unnamed Squad")
             current_user = request.user
-            new_squad = SavedSquads(name=squadname, user=current_user, squadcode=squadcode)
+            new_squad = SavedSquads(name=squadname, user=current_user, squadcode=squadcode, upvotes=0)
             new_squad.save()
             #squadname cleanup here in the future
             return render(request, 'squadbuilder/squadviewer.html',{'squadcode':squadcode,'squadname':squadname})

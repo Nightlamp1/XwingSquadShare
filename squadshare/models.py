@@ -18,3 +18,4 @@ class SquadComments(models.Model):
     comment = models.CharField(max_length=400)
     squad = models.ForeignKey(SavedSquads)
     user = models.ForeignKey(User)
+    commentDate = models.DateField(default=date.today)

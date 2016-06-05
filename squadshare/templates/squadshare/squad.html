@@ -27,7 +27,7 @@
 	
 	<p> Comments </p>
 	{% for comment in comments %}
-		<p>{{comment.comment}}</p>
+		<p>{{comment.comment}}--{{comment.user}}--{{comment.commentDate}}</p>
 	{% endfor %}
 	
 	{% if user.is_authenticated%}

@@ -37,15 +37,12 @@ def index(request):
                         upgrade_array.append(upgrade.name)
                 pilot_dict.append(upgrade_array)
                 pilot_list.append(pilot_dict)
-            squad_readout.append({'name':squad.name ,'list':pilot_list})
+            squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode})
         return squad_readout
     recent_squads = SavedSquads.objects.all().order_by('createdDate')[:5]
     squad_list = squadReader(recent_squads)    
     return render(request, 'squadshare/home.html', {'recent_squads':recent_squads,'squad_list':squad_list})
-
-
-            
-            
+          
 
 def contact(request):
     return render(request, 'squadshare/basic.html',{'content':['If you would like to contact me:',
@@ -97,3 +94,38 @@ def profile(request, username):
         user = User.objects.get(username=username)
         user_squads = SavedSquads.objects.filter(user=user)
         return render(request, 'squadshare/profile.html', {'user_squads':user_squads})
+
+def squad(request, squadcode):
+    squad_code = squadcode
+    squad=SavedSquads.objects.all().filter(id=squad_code)
+
+    def squadReader(squad_query):
+        squad_readout = []
+        for squad in squad_query:
+            query_array=[]
+            pilot_list =[]
+            squadcode = squad.squadcode
+            squadcode = squadcode.split('p')
+            for item in squadcode:
+                if item == "":
+                     pass
+                else:
+                    query_array.append(item.split('u'))
+            for query in query_array:
+                upgrade_array=[]
+                pilot_dict=[]
+                for index, query_id in enumerate(query):
+                    if index == 0:
+                        pilot = Pilots.objects.get(id=query_id)
+                        pilot_dict.append((pilot.name).replace(" ",""))
+                    else:
+                        upgrade = Upgrades.objects.get(id=query_id)
+                        upgrade_array.append((upgrade.name).replace(" ",""))
+                pilot_dict.append(upgrade_array)
+                pilot_list.append(pilot_dict)
+            squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode})
+        return squad_readout
+
+    squad_list = squadReader(squad)
+    
+    return render(request, 'squadshare/squad.html',{'squad':squad_list})

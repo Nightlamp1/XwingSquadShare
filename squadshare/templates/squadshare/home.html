@@ -16,7 +16,25 @@ but we are hoping to be open for business soon!</p>
 	</div>
 	<div class="panel-body">
 		{% for squad in recent_squads %}
-			<p>{{squad.name}}--{{squad.id}}--{{squad.user}}--{{squad.createdDate}}</p>
+			<button type="button" class="btn btn-default" name="squad{{squad.id}}" onclick="upvoteSquad({{squad.id}},name)">
+				<span class="glyphicon glyphicon-thumbs-up" name="squad{{squad.id}}"> {{squad.upvotes}}</span>
+			</button>
+			<h4 style="float:left;"><a href="/squad/{{squad.id}}">{{squad.name}}</a>&nbsp;&nbsp;&nbsp;</h4>
+			<h6>Created on: {{squad.createdDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By: {{squad.user}}</h6>
+			<div>
+				{% for item in squad_list %}
+				{% if item.name == squad.name %}
+					{% for pilot in item.list%}
+					<p><strong>{{pilot.0}}</strong>
+						{% for upgrade in pilot.1 %}
+							-{{upgrade}}
+						{% endfor %}
+					</p>
+					{% endfor %}
+				{% endif %}
+				{% endfor %}
+			</div>
+			
 		{% endfor %}
 	</div>
 </div>
@@ -26,14 +44,14 @@ but we are hoping to be open for business soon!</p>
 		<h3 class="panel-title">Hot Squads</h3>
 	</div>
 	<div class="panel-body">
-		{% for squad in recent_squads %}
-			<button type="button" class="btn btn-default">
-				<span class="glyphicon glyphicon-thumbs-up"> {{squad.upvotes}}</span>
+		{% for squad in hottest_squads %}
+			<button type="button" class="btn btn-default" name="squad{{squad.id}}" onclick="upvoteSquad({{squad.id}},name)">
+				<span class="glyphicon glyphicon-thumbs-up" name="squad{{squad.id}}"> {{squad.upvotes}}</span>
 			</button>
 			<h4 style="float:left;"><a href="/squad/{{squad.id}}">{{squad.name}}</a>&nbsp;&nbsp;&nbsp;</h4>
 			<h6>Created on: {{squad.createdDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By: {{squad.user}}</h6>
 			<div>
-				{% for item in squad_list %}
+				{% for item in hot_list %}
 				{% if item.name == squad.name %}
 					{% for pilot in item.list%}
 					<p><strong>{{pilot.0}}</strong>

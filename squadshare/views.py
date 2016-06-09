@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from squadbuilder.forms import LoginForm
 from squadshare.models import SavedSquads, SquadComments
 from squadbuilder.models import Pilots, Upgrades
@@ -13,6 +13,18 @@ from squadbuilder.models import Pilots, Upgrades
 # Create your views here.
 def index(request):
 
+    if request.method == 'POST':
+        #if request.user.is_authenticated():
+        squad_id = request.POST['squadId']
+        squad = SavedSquads.objects.get(id=squad_id)
+        previous_upvotes = squad.upvotes
+
+        current_upvotes = previous_upvotes + 1
+        squad.upvotes = current_upvotes
+        squad.save()
+        return HttpResponse(squad.upvotes)
+
+    
     def squadReader(squad_query):
         squad_readout = []
         for squad in squad_query:
@@ -39,9 +51,12 @@ def index(request):
                 pilot_list.append(pilot_dict)
             squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode})
         return squad_readout
-    recent_squads = SavedSquads.objects.all().order_by('createdDate')[:5]
-    squad_list = squadReader(recent_squads)    
-    return render(request, 'squadshare/home.html', {'recent_squads':recent_squads,'squad_list':squad_list})
+    recent_squads = SavedSquads.objects.all().order_by('-createdDate')[:5]
+    squad_list = squadReader(recent_squads)
+    hottest_squads = SavedSquads.objects.all().order_by('-upvotes')[:5]
+    hot_list = squadReader(hottest_squads)
+    return render(request, 'squadshare/home.html', {'recent_squads':recent_squads,'squad_list':squad_list
+                                                    ,'hottest_squads':hottest_squads, 'hot_list':hot_list})
           
 
 def contact(request):

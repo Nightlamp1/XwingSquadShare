@@ -136,3 +136,30 @@ $('#savesquad').click(function(){
 	$('input[name="squadcode"]').val(squadcode);
 	console.log(numOfPilots);
 });
+
+function upvoteSquad(squadId,name){
+	console.log("upvote button hit for " + squadId);
+	console.log(name);
+	var token = getCookie('csrftoken');
+	$.post("",{squadId : squadId, csrfmiddlewaretoken : token},function(data){
+		console.log("post worked " + data);
+		$('span[name='+name+']').each(function(){
+			$(this).text(" " + data);
+		});
+	});
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}

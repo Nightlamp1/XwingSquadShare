@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, password_validation
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect, HttpResponse
@@ -78,6 +78,8 @@ def register(request):
         c={}
         c.update(csrf(request))
         c['form'] = form
+        help_text = password_validation.password_validators_help_texts()
+        c['help_text']=help_text
         return render(request, 'squadshare/register.html',c)
     
 #Break out into seperate app?

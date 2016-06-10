@@ -14,15 +14,17 @@ from squadbuilder.models import Pilots, Upgrades
 def index(request):
 
     if request.method == 'POST':
-        #if request.user.is_authenticated():
         squad_id = request.POST['squadId']
         squad = SavedSquads.objects.get(id=squad_id)
-        previous_upvotes = squad.upvotes
-
-        current_upvotes = previous_upvotes + 1
-        squad.upvotes = current_upvotes
-        squad.save()
-        return HttpResponse(squad.upvotes)
+        
+        if request.user.is_authenticated():
+            previous_upvotes = squad.upvotes
+            current_upvotes = previous_upvotes + 1
+            squad.upvotes = current_upvotes
+            squad.save()
+            return HttpResponse(squad.upvotes)
+        else:
+            return HttpResponse(squad.upvotes)
 
     
     def squadReader(squad_query):
@@ -68,6 +70,7 @@ def contact(request):
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
+        #see if username is already taken
         if form.is_valid():
             form.save()
             return render(request,'squadshare/basic.html',{'content':["Registration Successful"]})

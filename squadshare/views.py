@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect, HttpResponse
 from squadbuilder.forms import LoginForm
-from squadshare.models import SavedSquads, SquadComments
+from squadshare.models import SavedSquads, SquadComments, UserUpvotes
 from squadbuilder.models import Pilots, Upgrades
 
 # Create your views here.
@@ -18,11 +18,19 @@ def index(request):
         squad = SavedSquads.objects.get(id=squad_id)
         
         if request.user.is_authenticated():
-            previous_upvotes = squad.upvotes
-            current_upvotes = previous_upvotes + 1
-            squad.upvotes = current_upvotes
-            squad.save()
-            return HttpResponse(squad.upvotes)
+            current_user = request.user
+            check_if_voted = UserUpvotes.objects.filter(user=current_user, squad=squad).exists()
+
+            if check_if_voted:
+                return HttpResponse(squad.upvotes)
+            else:
+                previous_upvotes = squad.upvotes
+                current_upvotes = previous_upvotes + 1
+                squad.upvotes = current_upvotes
+                user_upvote = UserUpvotes(user=current_user,squad=squad)
+                user_upvote.save()
+                squad.save()
+                return HttpResponse(squad.upvotes)
         else:
             return HttpResponse(squad.upvotes)
 

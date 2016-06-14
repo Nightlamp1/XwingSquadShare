@@ -19,3 +19,7 @@ class SquadComments(models.Model):
     squad = models.ForeignKey(SavedSquads)
     user = models.ForeignKey(User)
     commentDate = models.DateField(default=date.today)
+
+class UserUpvotes(models.Model):
+    user = models.ForeignKey(User)
+    squad = models.ForeignKey(SavedSquads)

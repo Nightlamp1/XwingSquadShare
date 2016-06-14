@@ -121,25 +121,29 @@ $('select').on('change',function(){
 });
 
 $('#savesquad').click(function(){
-	console.log("button click working");
-	var numOfPilots = $(".pilot").length;
-	var squadcode = "";
-	$(".pilot").each(function(){
-		squadcode+=$(this).attr('name');
-		$(this).children("span").each(function(){
-			if($(this).attr('class')!='dropdown'){
-				squadcode+=$(this).attr('name');
-			}
+	if(cost > 100){
+		$('#savedialog').html("<p> Squad value over 100. Please edit squad to less than or equal to 100 points </p>");
+	}
+	else{
+		$('#savedialog').html("<input type='hidden' name='squadcode' value=''>"+
+								"<br><h4>Enter Squad Name:</h4>"+
+								"<input type='text' class='form-control' name='squadname' placeholder='Squad Name' aria-describedby='basic-addon1'><br>"+
+								"<center><button id='finalsave' type='submit' class='btn btn-success'>Save Squad</button></center>");
+		var numOfPilots = $(".pilot").length;
+		var squadcode = "";
+		$(".pilot").each(function(){
+			squadcode+=$(this).attr('name');
+			$(this).children("span").each(function(){
+				if($(this).attr('class')!='dropdown'){
+					squadcode+=$(this).attr('name');
+				}
+			});
 		});
-	});
-	console.log(squadcode);
-	$('input[name="squadcode"]').val(squadcode);
-	console.log(numOfPilots);
+		$('input[name="squadcode"]').val(squadcode);
+	}
 });
 
 function upvoteSquad(squadId,name){
-	console.log("upvote button hit for " + squadId);
-	console.log(name);
 	var token = getCookie('csrftoken');
 	$.post("",{squadId : squadId, csrfmiddlewaretoken : token},function(data){
 		console.log("post worked " + data);

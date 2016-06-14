@@ -135,10 +135,12 @@ var upgradeCardList = {{cards|safe}};
 		
 		{% if user.is_authenticated %}
 		<form method="POST">{% csrf_token %}
-			<input type="hidden" name="squadcode" value="">
+		<div id="savedialog">
+			<!--<input type="hidden" name="squadcode" value="">
 			<br><h4>Enter Squad Name:</h4>
 			<input type="text" class="form-control" name="squadname" placeholder="Squad Name" aria-describedby="basic-addon1"><br>
-			<center><button id="finalsave" type="submit" class="btn btn-success">Save Squad</button></center>
+			<center><button id="finalsave" type="submit" class="btn btn-success">Save Squad</button></center>-->
+		</div>
 		</form>
 		{% else %}
 		<h3>Sorry you must be logged in to save squads</h3>

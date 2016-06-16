@@ -12,8 +12,9 @@ def squadbuilder(request):
         squadcode = request.POST.get('squadcode', "")
         if squadcode!="":
             squadname = request.POST.get('squadname',"Unnamed Squad")
+            cost = request.POST['cost']
             current_user = request.user
-            new_squad = SavedSquads(name=squadname, user=current_user, squadcode=squadcode, upvotes=0)
+            new_squad = SavedSquads(name=squadname, user=current_user, squadcode=squadcode, upvotes=0, cost=cost)
             new_squad.save()
             #squadname cleanup here in the future
             return render(request, 'squadbuilder/squadviewer.html',{'squadcode':squadcode,'squadname':squadname})
@@ -41,6 +42,18 @@ def squadbuilder(request):
                                 upgrades.append(upgrade[0])    
                                 upgradeList[pilotID]=upgrades
                                 pilotCostDict[pilotID]=pilot.pilotCost
+                                
+                types=list(UpgradeTypes.objects.all().values_list('name'))
+                for upgradeType in types:
+                    if int(quantity) >0:
+                        upgrade_builder={}
+                        upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0],expansion=(index+1)).values_list('name','upgradeCost','id'))
+                        for attribute in upgrade_attributes:
+                             upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2]}
+                        if upgradeType[0] in upgradeCardDict:
+                            upgradeCardDict[upgradeType[0]].update(upgrade_builder)
+                        else:
+                            upgradeCardDict[upgradeType[0]]=upgrade_builder
 
             for ship in ships:
                 if any(d['name']==ship.name for d in available_ships):
@@ -55,13 +68,13 @@ def squadbuilder(request):
                     available_pilots.append(pilot)
                 
             #need to revisit to apply filter by expansion
-            types=list(UpgradeTypes.objects.all().values_list('name'))
+            '''types=list(UpgradeTypes.objects.filter(expansion=(index+1)).values_list('name'))
             for upgradeType in types:
-                placeHolderDict={}
-                placeHolder=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost','id'))
-                for item in placeHolder:
-                     placeHolderDict[item[0]]={'cost':item[1],'code':item[2]}
-                upgradeCardDict[upgradeType[0]]=placeHolderDict
+                upgrade_builder={}
+                upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost','id'))
+                for attribute in upgrade_attributes:
+                     upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2]}
+                upgradeCardDict[upgradeType[0]]=upgrade_builder'''
             return render(request, 'squadbuilder/builder.html',{'ships':available_ships,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),
                                                                 'cards':json.dumps(upgradeCardDict),

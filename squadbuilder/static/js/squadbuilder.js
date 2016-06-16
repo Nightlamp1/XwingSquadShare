@@ -127,6 +127,7 @@ $('#savesquad').click(function(){
 	else{
 		$('#savedialog').html("<input type='hidden' name='squadcode' value=''>"+
 								"<br><h4>Enter Squad Name:</h4>"+
+								"<input type='hidden' name='cost' value=''>"+
 								"<input type='text' class='form-control' name='squadname' placeholder='Squad Name' aria-describedby='basic-addon1'><br>"+
 								"<center><button id='finalsave' type='submit' class='btn btn-success'>Save Squad</button></center>");
 		var numOfPilots = $(".pilot").length;
@@ -140,6 +141,7 @@ $('#savesquad').click(function(){
 			});
 		});
 		$('input[name="squadcode"]').val(squadcode);
+		$('input[name="cost"]').val(cost);
 	}
 });
 

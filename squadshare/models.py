@@ -13,6 +13,7 @@ class SavedSquads(models.Model):
     createdDate = models.DateField(default=date.today)
     user = models.ForeignKey(User)
     upvotes = models.IntegerField()
+    cost = models.IntegerField()
     
 class SquadComments(models.Model):
     comment = models.CharField(max_length=400)

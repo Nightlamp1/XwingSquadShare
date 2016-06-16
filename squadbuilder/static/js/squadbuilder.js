@@ -17,7 +17,7 @@ $(document).ready(function() {
 $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events
   if(this.checked) {
-	var htmlString = "";
+	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
 	
 	for (i=0; i<upgrades[this.id].length; i++){
 		htmlString += (
@@ -33,7 +33,7 @@ $(".pilotCheckbox").change(function() {
 		htmlString+=("<li><a class='upgrade' id=" + upgrades[this.id][i] + ">None</a></li></ul>"+"</span>");
 	
 	}
-	
+	htmlString+="</div><br>"
 	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + htmlString + "</div>");
 	cost+=pilotCost[this.id];
 	updateCostDisplay(cost);
@@ -65,7 +65,7 @@ $("#mytabs").click(function (e){
 $(document.body).on('click','.upgrade',function(){
 	
 	var selectedUpgrade=$(this).text().replace(/\s/g,"");
-	var pilot=$(this).closest('div').attr('id');
+	var pilot=$(this).closest('div').parent().attr('id');
 	var upgradeType = $(this).attr('id');
 	var upgradeCost=0;
 	
@@ -82,7 +82,7 @@ $(document.body).on('click','.upgrade',function(){
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 		console.log(pilot);
-		$("div#"+pilot).append('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$("div#"+pilot+"upgrades").before('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$("."+upgradeType+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
@@ -93,7 +93,7 @@ $(document.body).on('click','.upgrade',function(){
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$("div#"+pilot).append('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$("div#"+pilot+"upgrades").before('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$("."+upgradeType+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}

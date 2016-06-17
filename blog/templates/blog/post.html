@@ -4,5 +4,5 @@
 {% block content %}
 	<h3>{{post.title}}</h3>
 	<h6>on {{post.date}}</h6>
-	{{post.body|safe|linebreaks}}	
+	{{post.post|safe|linebreaks}}	
 {% endblock %}

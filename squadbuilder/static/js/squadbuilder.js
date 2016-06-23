@@ -26,9 +26,11 @@ $(".pilotCheckbox").change(function() {
 			"<button type='button' class='btn btn-default dropdown-toggle' id='test' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
 			"<ul class='dropdown-menu' aria-labelledby='test'>");
 	
-		upgradeCardArray=Object.keys(upgradeCardList[upgrades[this.id][i]]);
+		var pilotUpgradeList = upgrades[this.id]
+		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
 		for (j=0; j<upgradeCardArray.length; j++){
-			htmlString+= ("<li><a class='upgrade' id=" + upgrades[this.id][i] + ">" + upgradeCardArray[j] + "</a></li>");
+			var selected=upgrades[this.id][i].replace(/\s/g,"");
+			htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 			
 		}
 		htmlString+=("<li><a class='upgrade' id=" + upgrades[this.id][i] + ">None</a></li></ul>"+"</span>");
@@ -80,6 +82,7 @@ $(document.body).on('click','.upgrade',function(){
 		
 	}
 	else if($("."+upgradeType+pilot).length==0){
+		console.log(upgradeType);
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 		console.log(pilot);

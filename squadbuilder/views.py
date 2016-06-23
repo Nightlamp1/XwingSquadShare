@@ -53,9 +53,9 @@ def squadbuilder(request):
                         for attribute in upgrade_attributes:
                              upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2]}
                         if upgradeType[0] in upgradeCardDict:
-                            upgradeCardDict[upgradeType[0]].update(upgrade_builder)
+                            upgradeCardDict[upgradeType[0].replace(" ","")].update(upgrade_builder)
                         else:
-                            upgradeCardDict[upgradeType[0]]=upgrade_builder
+                            upgradeCardDict[upgradeType[0].replace(" ","")]=upgrade_builder
 
             for ship in ships:
                 if any(d['name']==ship.name for d in available_ships):

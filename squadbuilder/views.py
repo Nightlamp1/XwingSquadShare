@@ -36,6 +36,7 @@ def squadbuilder(request):
                         for pilot in pilots:
                             upgrades=[]
                             pilotID=pilot.name.replace(" ","")
+                            pilotID=pilotID.replace("'","")
                             if pilot.faction == "Scum":
                                 pilotID+="Scum"
                             all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity,'faction':pilot.faction})

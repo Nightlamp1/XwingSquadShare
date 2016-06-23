@@ -17,6 +17,7 @@ $(document).ready(function() {
 $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events
   if(this.checked) {
+	console.log(this.id);
 	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
 	
 	for (i=0; i<upgrades[this.id].length; i++){

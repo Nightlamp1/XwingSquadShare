@@ -11,6 +11,7 @@ var pilotCost = {{pilotCost|safe}};
 var upgradeCardList = {{cards|safe}};
 </script>
 
+{{upgrades}}
 
 
   <ul class="nav nav-tabs" role="tablist" id="mytabs">
@@ -36,7 +37,7 @@ var upgradeCardList = {{cards|safe}};
 		
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
 			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name %}
+			{% if pilot.ship == ship.name and pilot.faction == "Rebels"%}
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
@@ -67,7 +68,7 @@ var upgradeCardList = {{cards|safe}};
 	
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
 			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name %}
+			{% if pilot.ship == ship.name and pilot.faction == "Empire"%}
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
@@ -86,19 +87,19 @@ var upgradeCardList = {{cards|safe}};
 	
 	<div role="tabpanel" class="tab-pane" id="messages">
 	{% for ship in ships%}
-	{% if ship.faction == "Scum"%}
+	{% if ship.faction == "Scum" or ship.altFaction == "Scum"%}
 	  <div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="headingOne">
 		  <h4 class="panel-title">
-			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ship.name}}" aria-expanded="false" aria-controls="collapse{{ship.name}}">
+			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ship.name}}Scum" aria-expanded="false" aria-controls="collapse{{ship.name}}Scum">
 			  {{ship.name}}
 			</a>
 		  </h4>
 		</div>
 	
-		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+		<div id="collapse{{ship.name}}Scum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
 			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name %}
+			{% if pilot.ship == ship.name and pilot.faction == "Scum"%}
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >

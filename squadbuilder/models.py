@@ -23,6 +23,7 @@ class Ships(models.Model):
     expansion = models.ForeignKey(Expansions, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     faction = models.CharField(max_length=50)
+    altFaction = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name

@@ -32,11 +32,13 @@ def squadbuilder(request):
                     ship_query = Ships.objects.all().filter(expansion=(index+1))
                     for ship in ship_query:
                         ships.append(ship)
-                        pilots = Pilots.objects.filter(ship=ship, expansion=(index+1))
+                        pilots = Pilots.objects.all().filter(expansion=(index+1))
                         for pilot in pilots:
                             upgrades=[]
                             pilotID=pilot.name.replace(" ","")
-                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
+                            if pilot.faction == "Scum":
+                                pilotID+="Scum"
+                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
                             upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
                             for upgrade in upgrade_query:
                                 upgrades.append(upgrade[0])    
@@ -59,10 +61,10 @@ def squadbuilder(request):
                 if any(d['name']==ship.name for d in available_ships):
                     pass #add quantity addition here
                 else:
-                    available_ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity})
+                    available_ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity, 'altFaction':ship.altFaction})
 
             for pilot in all_pilots:
-                if any(d['name']==pilot['name'] for d in available_pilots):
+                if any((d['name']==pilot['name'] and d['faction']==pilot['faction']) for d in available_pilots):
                     pass #add quantity addition here
                 else:
                     available_pilots.append(pilot)

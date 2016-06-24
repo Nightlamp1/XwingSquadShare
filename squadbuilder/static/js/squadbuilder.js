@@ -21,19 +21,29 @@ $(".pilotCheckbox").change(function() {
 	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
 	
 	for (i=0; i<upgrades[this.id].length; i++){
-		htmlString += (
-		"<span class='dropdown'>"+
-			"<button type='button' class='btn btn-default dropdown-toggle' id='test' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
+		htmlString += ("<span class='dropdown'>");
+		console.log(countUpgrade(upgrades[this.id],upgrades[this.id][i]));
+		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);
+		if(multipleChecker > 1){
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
 			"<ul class='dropdown-menu' aria-labelledby='test'>");
-	
+		}
+		else{
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
+			"<ul class='dropdown-menu' aria-labelledby='test'>");
+		}
+		
 		var pilotUpgradeList = upgrades[this.id]
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
 		for (j=0; j<upgradeCardArray.length; j++){
 			var selected=upgrades[this.id][i].replace(/\s/g,"");
+			if(multipleChecker>1){
+				selected+=i;
+			}
 			htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 			
 		}
-		htmlString+=("<li><a class='upgrade' id=" + upgrades[this.id][i] + ">None</a></li></ul>"+"</span>");
+		htmlString+=("<li><a class='upgrade' id=" + selected + ">None</a></li></ul>"+"</span>");
 	
 	}
 	htmlString+="</div><br>"
@@ -69,36 +79,39 @@ $(document.body).on('click','.upgrade',function(){
 	
 	var selectedUpgrade=$(this).text().replace(/\s/g,"");
 	var pilot=$(this).closest('div').parent().attr('id');
-	var upgradeType = $(this).attr('id');
+	var upgradeId = $(this).attr('id');
+	var upgradeType = upgradeId.replace(/[0-9]/g,"");
 	var upgradeCost=0;
 	
 	if(selectedUpgrade=="None"){
-		upgradeCost=$("."+upgradeType+pilot).data("cost");
+		console.log("none selected");
+		console.log(upgradeId + pilot);
+		upgradeCost=$("."+upgradeId+pilot).data("cost");
 		if(upgradeCost == null){
 			upgradeCost=0;
 		}
-		$("."+upgradeType+pilot).remove();
+		$("."+upgradeId+pilot).remove();
 		updateCostDisplay(cost-=upgradeCost);
 		
 	}
-	else if($("."+upgradeType+pilot).length==0){
+	else if($("."+upgradeId+pilot).length==0){
 		console.log(upgradeType);
+		console.log(upgradeId);
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		console.log(pilot);
-		$("div#"+pilot+"upgrades").before('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
-		$("."+upgradeType+pilot).data("cost", upgradeCost);
+		$("div#"+pilot+"upgrades").before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
 	else{
-		upgradeCost=$("."+upgradeType+pilot).data("cost");
+		upgradeCost=$("."+upgradeId+pilot).data("cost");
 		updateCostDisplay(cost-=upgradeCost);
-		$("."+upgradeType+pilot).remove();
+		$("."+upgradeId+pilot).remove();
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$("div#"+pilot+"upgrades").before('<span class=' + upgradeType + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
-		$("."+upgradeType+pilot).data("cost", upgradeCost);
+		$("div#"+pilot+"upgrades").before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
 });
@@ -179,4 +192,14 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+function countUpgrade(pilotUpgrades, upgrade) {
+    var count = 0;
+    for (var i = 0; i < pilotUpgrades.length; i++) {
+        if (pilotUpgrades[i] === upgrade) {
+            count++;
+        }
+    }
+    return count;
 }

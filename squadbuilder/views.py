@@ -49,11 +49,21 @@ def squadbuilder(request):
                             if pilot.faction == "Scum":
                                 pilotID+="Scum"
                             all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
-                            upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name'))
+                            #upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name','quantity'))#need to add upgrade quantity
+                            upgrade_query = Pilot2Upgrades.objects.select_related('upgrade').filter(pilot=pilot)
                             for upgrade in upgrade_query:
-                                upgrades.append(upgrade[0])    
-                                upgradeList[pilotID]=upgrades
-                                pilotCostDict[pilotID]=pilot.pilotCost
+                                if int(expansion[1]) > 1:
+                                    pass
+                                else:
+                                    if upgrade.quantity > 1:
+                                        for value in range(0,int(upgrade.quantity)):
+                                            upgrades.append(upgrade.upgrade.name)
+                                    else:
+                                        upgrades.append(upgrade.upgrade.name)
+                                
+                                    #upgrades.append(upgrade[0])    
+                                    upgradeList[pilotID]=upgrades
+                                    pilotCostDict[pilotID]=pilot.pilotCost
                                 
                 types=list(UpgradeTypes.objects.all().values_list('name'))
                 for upgradeType in types:

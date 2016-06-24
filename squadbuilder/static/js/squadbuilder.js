@@ -119,6 +119,7 @@ $('select').on('change',function(){
 	var numOfExpansions = $(".expansion-qty").length;
 	var expansionQtyList = [];
 	for(i=1;i<=numOfExpansions;i++){
+		//console.log($("#"+i+"select").attr("name") + "p");
 		expansionQtyList+=$("#"+i+"select option:selected").text();
 	}
 	$('input[name="expansionCode"]').val(expansionQtyList);

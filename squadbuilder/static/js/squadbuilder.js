@@ -17,12 +17,10 @@ $(document).ready(function() {
 $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events
   if(this.checked) {
-	console.log(this.id);
 	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
 	
 	for (i=0; i<upgrades[this.id].length; i++){
 		htmlString += ("<span class='dropdown'>");
-		console.log(countUpgrade(upgrades[this.id],upgrades[this.id][i]));
 		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);
 		if(multipleChecker > 1){
 			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
@@ -84,8 +82,6 @@ $(document.body).on('click','.upgrade',function(){
 	var upgradeCost=0;
 	
 	if(selectedUpgrade=="None"){
-		console.log("none selected");
-		console.log(upgradeId + pilot);
 		upgradeCost=$("."+upgradeId+pilot).data("cost");
 		if(upgradeCost == null){
 			upgradeCost=0;
@@ -95,8 +91,6 @@ $(document.body).on('click','.upgrade',function(){
 		
 	}
 	else if($("."+upgradeId+pilot).length==0){
-		console.log(upgradeType);
-		console.log(upgradeId);
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 		$("div#"+pilot+"upgrades").before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
@@ -172,7 +166,6 @@ $('#savesquad').click(function(){
 function upvoteSquad(squadId,name){
 	var token = getCookie('csrftoken');
 	$.post("",{squadId : squadId, csrfmiddlewaretoken : token},function(data){
-		console.log("post worked " + data);
 		$('span[name='+name+']').each(function(){
 			$(this).text(" " + data);
 		});

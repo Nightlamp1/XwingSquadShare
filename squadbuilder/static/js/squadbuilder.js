@@ -118,11 +118,17 @@ function updateCostDisplay(newvalue){
 $('select').on('change',function(){
 	var numOfExpansions = $(".expansion-qty").length;
 	var expansionQtyList = [];
+	$("#expansion-selector").empty();
 	for(i=1;i<=numOfExpansions;i++){
-		//console.log($("#"+i+"select").attr("name") + "p");
-		expansionQtyList+=$("#"+i+"select option:selected").text();
+		var expansionId = parseInt($("#"+i+"select").attr("name"));
+		var expansionQty = parseInt($("#"+i+"select option:selected").text());
+		var expansionArray = [expansionId,expansionQty];
+		//expansionQtyList+="[" + expansionId + ",";
+		//expansionQtyList+=expansionQty+"] ";
+		expansionQtyList.push(expansionArray);
+		$("#expansion-selector").append("<input type='hidden' name='expansionCode' value="+expansionArray+">");
 	}
-	$('input[name="expansionCode"]').val(expansionQtyList);
+	//$('input[name="expansionCode"]').val(expansionQtyList);
 });
 
 $('#savesquad').click(function(){

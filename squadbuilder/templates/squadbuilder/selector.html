@@ -4,7 +4,8 @@
 
 
 {% block content %}
-
+{{waves}}
+{{expansions}}
 <div class="panel panel-default">
 	<div class="panel-heading" role="tab" id="headingOne">
 	  <h4 class="panel-title">
@@ -14,29 +15,33 @@
 	  </h4>
 </div>
 <div id="collapsetest" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-	{% for expansion in expansions %}
-	
-		<div class="list-group" style="position:relative">
-			<div class="btn-group" data-toggle="buttons">
-				<label >
-					<span style="float:left">{{expansion.name}}:</span>
-					<span class="form-group-sm" style="float:right">
-					  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
-					    <option value="0">0</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-					  </select>
-					</span>
-				</label>
+	{% for wave in waves%}
+	<h3> {{wave.0}} </h3>
+		{% for expansion in expansions %}
+		{% if expansion.wave == wave.0 %}
+			<div class="list-group" style="position:relative">
+				<div class="btn-group" data-toggle="buttons">
+					<label >
+						<span style="float:left">{{expansion.name}}:</span>
+						<span class="form-group-sm" style="float:right">
+						  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+						  </select>
+						</span>
+					</label>
+				</div>
 			</div>
-		</div>
-	
+		{% endif %}
+		{% endfor %}
 	{% endfor %}
 	
 	<form method="POST">{% csrf_token %}
-	<input type="hidden" name="expansionCode" value="">
+	<input type="hidden" name="expansionCode222" value="">
+	<div id="expansion-selector"></div>
 	<button class="btn btn-primary btn-sm" type="submit">Let's Build!</button>
 	</form>
 	

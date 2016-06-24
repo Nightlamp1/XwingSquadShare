@@ -19,7 +19,16 @@ def squadbuilder(request):
             #squadname cleanup here in the future
             return render(request, 'squadbuilder/squadviewer.html',{'squadcode':squadcode,'squadname':squadname})
         else:
-            selected_expansions=request.POST['expansionCode']
+            selected_expansions=request.POST.getlist('expansionCode')
+            selected_expansions_conversion = []
+            for value in selected_expansions:
+                x = value.split(",",2)
+                y = []
+                for num in x:
+                    z=int(num)
+                    y.append(z)
+                selected_expansions_conversion.append(y)
+            
             ships = []
             available_ships =[]
             available_pilots =[]
@@ -27,12 +36,12 @@ def squadbuilder(request):
             upgradeList={}
             pilotCostDict={}
             upgradeCardDict={}
-            for index, quantity in enumerate(selected_expansions):
-                if int(quantity) > 0:
-                    ship_query = Ships.objects.all().filter(expansion=(index+1))
+            for expansion in selected_expansions_conversion: #expansion[0]=expansion id, expansion[1]=quantity
+                if int(expansion[1]) > 0:
+                    ship_query = Ships.objects.all().filter(expansion=(expansion[0]))
                     for ship in ship_query:
                         ships.append(ship)
-                        pilots = Pilots.objects.all().filter(expansion=(index+1))
+                        pilots = Pilots.objects.all().filter(expansion=(expansion[0]))
                         for pilot in pilots:
                             upgrades=[]
                             pilotID=pilot.name.replace(" ","")
@@ -48,9 +57,9 @@ def squadbuilder(request):
                                 
                 types=list(UpgradeTypes.objects.all().values_list('name'))
                 for upgradeType in types:
-                    if int(quantity) >0:
+                    if int(expansion[1]) >0:
                         upgrade_builder={}
-                        upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0],expansion=(index+1)).values_list('name','upgradeCost','id'))
+                        upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0],expansion=(expansion[0])).values_list('name','upgradeCost','id'))
                         for attribute in upgrade_attributes:
                              upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2]}
                         if upgradeType[0] in upgradeCardDict:
@@ -70,21 +79,14 @@ def squadbuilder(request):
                 else:
                     available_pilots.append(pilot)
                 
-            #need to revisit to apply filter by expansion
-            '''types=list(UpgradeTypes.objects.filter(expansion=(index+1)).values_list('name'))
-            for upgradeType in types:
-                upgrade_builder={}
-                upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0]).values_list('name','upgradeCost','id'))
-                for attribute in upgrade_attributes:
-                     upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2]}
-                upgradeCardDict[upgradeType[0]]=upgrade_builder'''
             return render(request, 'squadbuilder/builder.html',{'ships':available_ships,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),
                                                                 'cards':json.dumps(upgradeCardDict),
                                                                 'pilots':available_pilots})
     else:
         exps = Expansions.objects.all()#will need to be owned expansions
-        return render(request, 'squadbuilder/selector.html',{'expansions':exps})
+        waves = Expansions.objects.order_by('wave').values_list('wave').distinct()
+        return render(request, 'squadbuilder/selector.html',{'expansions':exps,'waves':waves})
         
 
 

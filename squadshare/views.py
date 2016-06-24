@@ -143,7 +143,12 @@ def squad(request, squadcode):
                 for index, query_id in enumerate(query):
                     if index == 0:
                         pilot = Pilots.objects.get(id=query_id)
-                        pilot_dict.append((pilot.name).replace(" ",""))
+                        pilot_name = pilot.name.replace(" ","")
+                        pilot_name = pilot_name.replace("'","")
+                        if pilot.faction == "Scum":
+                            pilot_dict.append(pilot_name+"Scum")
+                        else:    
+                            pilot_dict.append(pilot_name)
                     else:
                         upgrade = Upgrades.objects.get(id=query_id)
                         upgrade_array.append((upgrade.name).replace(" ",""))

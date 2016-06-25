@@ -40,16 +40,15 @@ def squadbuilder(request):
                 if int(expansion[1]) > 0:
                     ship_query = Ships.objects.all().filter(expansion=(expansion[0]))
                     for ship in ship_query:
-                        ships.append(ship)
-                        pilots = Pilots.objects.all().filter(expansion=(expansion[0]))
+                        ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity*expansion[1], 'altFaction':ship.altFaction})
+                        pilots = Pilots.objects.all().filter(expansion=(expansion[0]),ship=ship)
                         for pilot in pilots:
                             upgrades=[]
                             pilotID=pilot.name.replace(" ","")
                             pilotID=pilotID.replace("'","")
                             if pilot.faction == "Scum":
                                 pilotID+="Scum"
-                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity,'faction':pilot.faction})
-                            #upgrade_query = list(UpgradeTypes.objects.filter(pilot2upgrades__pilot=pilot).values_list('name','quantity'))#need to add upgrade quantity
+                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity*expansion[1],'faction':pilot.faction})
                             upgrade_query = Pilot2Upgrades.objects.select_related('upgrade').filter(pilot=pilot)
                             for upgrade in upgrade_query:
                                 if int(expansion[1]) > 1:
@@ -78,14 +77,16 @@ def squadbuilder(request):
                             upgradeCardDict[upgradeType[0].replace(" ","")]=upgrade_builder
 
             for ship in ships:
-                if any(d['name']==ship.name for d in available_ships):
+                if any(d['name']==ship['name'] for d in available_ships):
                     pass #add quantity addition here
                 else:
-                    available_ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity, 'altFaction':ship.altFaction})
+                    available_ships.append(ship)
 
             for pilot in all_pilots:
                 if any((d['name']==pilot['name'] and d['faction']==pilot['faction']) for d in available_pilots):
-                    pass #add quantity addition here
+                    for entry in available_pilots:
+                        if pilot['name']==entry['name'] and pilot['faction']==entry['faction']:
+                            entry['quantity']+=pilot['quantity']
                 else:
                     available_pilots.append(pilot)
                 

@@ -30,8 +30,10 @@ def squadbuilder(request):
                 selected_expansions_conversion.append(y)
             
             ships = []
-            available_ships =[]
-            available_pilots =[]
+            ship_objects =[]
+            pilot_objects =[]
+            available_pilots ={}
+            available_ships={}
             all_pilots=[]
             upgradeList={}
             pilotCostDict={}
@@ -51,17 +53,14 @@ def squadbuilder(request):
                             all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity*expansion[1],'faction':pilot.faction})
                             upgrade_query = Pilot2Upgrades.objects.select_related('upgrade').filter(pilot=pilot)
                             for upgrade in upgrade_query:
-                                if int(expansion[1]) > 1:
-                                    pass
-                                else:
-                                    if upgrade.quantity > 1:
-                                        for value in range(0,int(upgrade.quantity)):
-                                            upgrades.append(upgrade.upgrade.name)
-                                    else:
+                                if upgrade.quantity > 1:
+                                    for value in range(0,int(upgrade.quantity)):
                                         upgrades.append(upgrade.upgrade.name)
+                                else:
+                                    upgrades.append(upgrade.upgrade.name)
                                    
-                                    upgradeList[pilotID]=upgrades
-                                    pilotCostDict[pilotID]=pilot.pilotCost
+                                upgradeList[pilotID]=upgrades
+                                pilotCostDict[pilotID]=pilot.pilotCost
                                 
                 types=list(UpgradeTypes.objects.all().values_list('name'))
                 for upgradeType in types:
@@ -79,23 +78,28 @@ def squadbuilder(request):
                             upgradeCardDict[upgradeType[0].replace(" ","")]=upgrade_builder
 
             for ship in ships:
-                if any(d['name']==ship['name'] for d in available_ships):
-                    pass #add quantity addition here
+                if any(d['name']==ship['name'] for d in ship_objects):
+                    available_ships[ship['name']]['quantity']+=ship['quantity']
                 else:
-                    available_ships.append(ship)
+                    ship_objects.append(ship)
+                    available_ships[ship['name']]=ship
 
             for pilot in all_pilots:
-                if any((d['name']==pilot['name'] and d['faction']==pilot['faction']) for d in available_pilots):
-                    for entry in available_pilots:
+                if any((d['name']==pilot['name'] and d['faction']==pilot['faction']) for d in pilot_objects):
+                    for entry in pilot_objects:
                         if pilot['name']==entry['name'] and pilot['faction']==entry['faction']:
                             entry['quantity']+=pilot['quantity']
+                            available_pilots[pilot['id']]['quantity']+=pilot['quantity']
                 else:
-                    available_pilots.append(pilot)
+                    pilot_objects.append(pilot)
+                    available_pilots[pilot['id']]={'quantity':pilot['quantity']}
                 
-            return render(request, 'squadbuilder/builder.html',{'ships':available_ships,'upgrades':json.dumps(upgradeList),
+            return render(request, 'squadbuilder/builder.html',{'ships':ship_objects,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),
                                                                 'cards':json.dumps(upgradeCardDict),
-                                                                'pilots':available_pilots})
+                                                                'pilots':pilot_objects,
+                                                                'available_pilots':json.dumps(available_pilots),
+                                                                'available_ships':json.dumps(available_ships)})
     else:
         exps = Expansions.objects.all()#will need to be owned expansions
         waves = Expansions.objects.order_by('wave').values_list('wave').distinct()

@@ -18,7 +18,7 @@ $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events
   if(this.checked) {
 	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
-	
+	console.log(upgrades[this.id]);
 	for (i=0; i<upgrades[this.id].length; i++){
 		htmlString += ("<span class='dropdown'>");
 		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);

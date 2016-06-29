@@ -11,8 +11,11 @@ $(document).ready(function() {
 //  for initializing variables and finalizing the page after the client has 
 //	finished loading.
 	$("#cost").text(cost +"/100");
+	$('#popover').popover();
 	
 });
+
+
 
 $(".pilotCheckbox").change(function() {
   // Attach an event to all objects with class pilotCheckbox change events

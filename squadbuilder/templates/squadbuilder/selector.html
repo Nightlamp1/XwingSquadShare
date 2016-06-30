@@ -8,12 +8,12 @@
 <div class="panel panel-default">
 	<div class="panel-heading" role="tab" id="headingOne">
 	  <h4 class="panel-title">
-		<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsetest" aria-expanded="false" aria-controls="collapsetest">
+		<a role="button" class="" data-toggle="collapse" data-parent="#accordion" href="#collapsetest" aria-expanded="true" aria-controls="collapsetest">
 		  Select Expansions
 		</a>
 	  </h4>
 </div>
-<div id="collapsetest" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+<div id="collapsetest" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" aria-expanded="true">
 	{% for wave in waves%}
 	<h3> {{wave.0}} </h3>
 		{% for expansion in expansions %}

@@ -29,10 +29,9 @@ $(document.body).on('click','[type=deletepilot]',function(){
 });
 
 
-//$(".pilotCheckbox").change(function() {
+
 $("button[type='pilotbutton']").click(function(){
   // Attach an event to all objects with class pilotCheckbox change events
-  //if(this.checked) {
 	var htmlString = "<div id=" + this.id + "upgrades><button id=" + this.id + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
 	for (i=0; i<upgrades[this.id].length; i++){
 		htmlString += ("<span class='dropdown'>");
@@ -48,8 +47,9 @@ $("button[type='pilotbutton']").click(function(){
 		
 		var pilotUpgradeList = upgrades[this.id]
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
+		var selected=upgrades[this.id][i].replace(/\s/g,"");
 		for (j=0; j<upgradeCardArray.length; j++){
-			var selected=upgrades[this.id][i].replace(/\s/g,"");
+			//var selected=upgrades[this.id][i].replace(/\s/g,"");
 			if(multipleChecker>1){
 				selected+=i;
 			}
@@ -65,19 +65,6 @@ $("button[type='pilotbutton']").click(function(){
 	cost+=pilotCost[this.id];
 	updateCostDisplay(cost);
 	
-
-  /*} else {
-	for (i=0; i<upgrades[this.id].length; i++){
-		var upgradeCost = $("."+upgrades[this.id][i]+this.id).data("cost");
-		if (upgradeCost != null){
-			cost-=upgradeCost;
-		}
-		
-	}
-	$("div#" +this.id).last().remove();
-	cost-=pilotCost[this.id];
-	updateCostDisplay(cost);
-  }*/
 });
 
 $("#mytabs").click(function (e){

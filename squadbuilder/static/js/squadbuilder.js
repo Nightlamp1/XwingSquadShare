@@ -15,13 +15,25 @@ $(document).ready(function() {
 	
 });
 
+$(document.body).on('click','[type=deletepilot]',function(){
+	for (i=0; i<upgrades[this.id].length; i++){
+		var upgradeCost = $("."+upgrades[this.id][i]+this.id).data("cost");
+		if (upgradeCost != null){
+			cost-=upgradeCost;
+		}
+		
+	}
+	$("div#" +this.id).last().remove();
+	cost-=pilotCost[this.id];
+	updateCostDisplay(cost);	//upgrades adding to all at once!!!! also setup deleting only parent
+});
 
 
-$(".pilotCheckbox").change(function() {
+//$(".pilotCheckbox").change(function() {
+$("button[type='pilotbutton']").click(function(){
   // Attach an event to all objects with class pilotCheckbox change events
-  if(this.checked) {
-	var htmlString = "<div id=" + this.id + "upgrades><h4>Choose Upgrades:</h4>";
-	console.log(upgrades[this.id]);
+  //if(this.checked) {
+	var htmlString = "<div id=" + this.id + "upgrades><button id=" + this.id + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
 	for (i=0; i<upgrades[this.id].length; i++){
 		htmlString += ("<span class='dropdown'>");
 		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);
@@ -48,12 +60,13 @@ $(".pilotCheckbox").change(function() {
 	
 	}
 	htmlString+="</div><br>"
-	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + htmlString + "</div>");
+	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + 
+						htmlString + "</div>");
 	cost+=pilotCost[this.id];
 	updateCostDisplay(cost);
 	
 
-  } else {
+  /*} else {
 	for (i=0; i<upgrades[this.id].length; i++){
 		var upgradeCost = $("."+upgrades[this.id][i]+this.id).data("cost");
 		if (upgradeCost != null){
@@ -64,7 +77,7 @@ $(".pilotCheckbox").change(function() {
 	$("div#" +this.id).last().remove();
 	cost-=pilotCost[this.id];
 	updateCostDisplay(cost);
-  }
+  }*/
 });
 
 $("#mytabs").click(function (e){
@@ -85,30 +98,30 @@ $(document.body).on('click','.upgrade',function(){
 	var upgradeCost=0;
 	
 	if(selectedUpgrade=="None"){
-		upgradeCost=$("."+upgradeId+pilot).data("cost");
+		upgradeCost=$(this).closest('div').siblings("."+upgradeId+pilot).data("cost");
 		if(upgradeCost == null){
 			upgradeCost=0;
 		}
-		$("."+upgradeId+pilot).remove();
+		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
 		updateCostDisplay(cost-=upgradeCost);
 		
 	}
-	else if($("."+upgradeId+pilot).length==0){
+	else if($(this).closest('div').siblings("."+upgradeId+pilot).length==0){
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$("div#"+pilot+"upgrades").before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
-		$("."+upgradeId+pilot).data("cost", upgradeCost);
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost",upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
 	else{
-		upgradeCost=$("."+upgradeId+pilot).data("cost");
+		upgradeCost=$(this).closest('div').siblings("."+upgradeId+pilot).data("cost");
 		updateCostDisplay(cost-=upgradeCost);
-		$("."+upgradeId+pilot).remove();
+		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$("div#"+pilot+"upgrades").before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
-		$("."+upgradeId+pilot).data("cost", upgradeCost);
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 	}
 });

@@ -5,11 +5,12 @@
 
 {% block content %}
 
-
 <script type='text/javascript'>
 var upgrades = {{ upgrades|safe }};
 var pilotCost = {{pilotCost|safe}};
 var upgradeCardList = {{cards|safe}};
+var available_ships = {{available_ships|safe}};
+var available_pilots = {{available_pilots|safe}};
 </script>
 
   <ul class="nav nav-tabs" role="tablist" id="mytabs">
@@ -39,7 +40,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+							<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
 					</div>
 				</div>
@@ -70,7 +71,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}" aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
 					</div>
 				</div>
@@ -101,7 +102,7 @@ var upgradeCardList = {{cards|safe}};
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
 						<label >
-							<input class="pilotCheckbox" type="checkbox" id="{{pilot.id}}" name="p{{pilot.code}}"  aria-label="...">{{pilot.name}}-{{pilot.cost}}</input>
+						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
 					</div>
 				</div>
@@ -135,10 +136,7 @@ var upgradeCardList = {{cards|safe}};
 		{% if user.is_authenticated %}
 		<form method="POST">{% csrf_token %}
 		<div id="savedialog">
-			<!--<input type="hidden" name="squadcode" value="">
-			<br><h4>Enter Squad Name:</h4>
-			<input type="text" class="form-control" name="squadname" placeholder="Squad Name" aria-describedby="basic-addon1"><br>
-			<center><button id="finalsave" type="submit" class="btn btn-success">Save Squad</button></center>-->
+
 		</div>
 		</form>
 		{% else %}

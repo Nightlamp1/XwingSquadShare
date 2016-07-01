@@ -5204,7 +5204,7 @@ a.thumbnail.active {
 }
 .media,
 .media-body {
-  overflow: hidden;
+  overflow: visible;
   zoom: 1;
 }
 .media-body {
@@ -6757,4 +6757,6 @@ button.close {
     display: none !important;
   }
 }
+
+
 /*# sourceMappingURL=bootstrap.css.map */

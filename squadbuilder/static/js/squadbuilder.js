@@ -34,7 +34,7 @@ $("button[type='pilotbutton']").click(function(){
   // Attach an event to all objects with class pilotCheckbox change events
 	var htmlString = "<div id=" + this.id + "upgrades><button id=" + this.id + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
 	for (i=0; i<upgrades[this.id].length; i++){
-		htmlString += ("<span class='dropdown'>");
+		htmlString += ("<span class='dropup'>");
 		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);
 		if(multipleChecker > 1){
 			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+

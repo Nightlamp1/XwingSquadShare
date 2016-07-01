@@ -26,7 +26,10 @@
 	
 	<p> Comments </p>
 	{% for comment in comments %}
-		<p>{{comment.comment}}--{{comment.user}}--{{comment.commentDate}}</p>
+		<div class="panel panel-default">
+			<h4>{{comment.comment}}</h4>
+			<p> by:{{comment.user}} on:{{comment.commentDate}}</p>
+		</div>
 	{% endfor %}
 	
 	{% if user.is_authenticated%}

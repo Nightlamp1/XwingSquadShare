@@ -49,8 +49,8 @@ $("button[type='pilotbutton']").click(function(){
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
 		var selected=upgrades[this.id][i].replace(/\s/g,"");
 		for (j=0; j<upgradeCardArray.length; j++){
-			//var selected=upgrades[this.id][i].replace(/\s/g,"");
 			if(multipleChecker>1){
+				var selected=upgrades[this.id][i].replace(/\s/g,"");
 				selected+=i;
 			}
 			htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");

@@ -66,3 +66,9 @@ class UpgradeRestrictions(models.Model):
     upgrade = models.CharField(max_length=50)
     restriction = models.CharField(max_length=50)
     restriction_type = models.CharField(max_length=20)
+
+class UpgradeBonus(models.Model):
+    upgrade = models.CharField(max_length=50)
+    bonus_type = models.CharField(max_length=10)
+    bonus = models.ForeignKey(UpgradeTypes)
+    bonus_quantity = models.IntegerField()

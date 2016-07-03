@@ -16,56 +16,34 @@ $(document).ready(function() {
 });
 
 $(document.body).on('click','[type=deletepilot]',function(){
-	for (i=0; i<upgrades[this.id].length; i++){
+	current_upgrades = $(this).parent().siblings('span').each(function(){
+		console.log($(this).data('cost'));
+		cost-=$(this).data('cost');
+	});
+
+	/*for (i=0; i<upgrades[this.id].length; i++){
 		var upgradeCost = $("."+upgrades[this.id][i]+this.id).data("cost");
 		if (upgradeCost != null){
 			cost-=upgradeCost;
-		}
+		}//Cost not being removed correctly for multiple upgrade ships
 		
-	}
-	$("div#" +this.id).last().remove();
+	}*/
+	$(this).parent().parent().remove();
 	cost-=pilotCost[this.id];
-	updateCostDisplay(cost);	//upgrades adding to all at once!!!! also setup deleting only parent
+	updateCostDisplay(cost);	
 });
 
 
 
 $("button[type='pilotbutton']").click(function(){
-  // Attach an event to all objects with class pilotCheckbox change events
-	var htmlString = "<div id=" + this.id + "upgrades><button id=" + this.id + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
-	for (i=0; i<upgrades[this.id].length; i++){
-		htmlString += ("<span class='dropup'>");
-		multipleChecker = countUpgrade(upgrades[this.id],upgrades[this.id][i]);
-		if(multipleChecker > 1){
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
-			"<ul class='dropdown-menu' aria-labelledby='test'>");
-		}
-		else{
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + this.id + upgrades[this.id][i] + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[this.id][i] + "</button>"+
-			"<ul class='dropdown-menu' aria-labelledby='test'>");
-		}
-		
-		var pilotUpgradeList = upgrades[this.id]
-		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
-		var selected=upgrades[this.id][i].replace(/\s/g,"");
-		for (j=0; j<upgradeCardArray.length; j++){
-			if(multipleChecker>1){
-				var selected=upgrades[this.id][i].replace(/\s/g,"");
-				selected+=i;
-			}
-			var restricted = isRestriction(this.id,upgradeCardArray[j]);
-			if(!restricted){
-				htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
-			}
-			
-			
-		}
-		htmlString+=("<li><a class='upgrade' id=" + selected + ">None</a></li></ul>"+"</span>");
-	
-	}
-	htmlString+="</div><br>"
+	console.log(this);
+	var htmlString = "<div id=" + this.id + "upgrades>";
+	htmlString += generateUpgradeHtml(this.id,false,[]);
+	htmlString+="</div><br>";
+
 	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + '<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + 
 						htmlString + "</div>");
+						
 	cost+=pilotCost[this.id];
 	updateCostDisplay(cost);
 	
@@ -114,6 +92,13 @@ $(document.body).on('click','.upgrade',function(){
 		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
+	}
+	
+	if(bonusCheck(selectedUpgrade)){
+		$("div#" + pilot + "upgrades").empty();
+		htmlString=generateUpgradeHtml(pilot,true,['Torpedoes','Torpedoes']);
+		$("div#" + pilot + "upgrades").html(htmlString);
+
 	}
 });
 
@@ -223,5 +208,58 @@ function isRestriction(currentPilot,currentUpgrade){
 			}
 		}
 	}
+}
 
+function bonusCheck(currentUpgrade){
+	var checker = upgrade_bonus[currentUpgrade];
+	if (checker === undefined){
+		return false;
+	}
+	else{
+		return true;
+	}	
+}
+
+function generateUpgradeHtml(pilot,isBonus,bonusArray){
+	
+	var htmlString = "<button id=" + pilot + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
+	console.log(pilot);
+	var pilotUpgradeList = upgrades[pilot];
+	if(isBonus){
+		console.log("Thar be a bonus");
+		for(i=0;i<bonusArray.length; i++){
+			pilotUpgradeList.push(bonusArray[i]);
+		}
+	}
+	for (i=0; i<pilotUpgradeList.length; i++){
+		htmlString += ("<span class='dropup'>");
+		multipleChecker = countUpgrade(upgrades[pilot],upgrades[pilot][i]);
+		if(multipleChecker > 1){
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
+			"<ul class='dropdown-menu' aria-labelledby='test'>");
+		}
+		else{
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
+			"<ul class='dropdown-menu' aria-labelledby='test'>");
+		}
+		
+		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
+		var selected=upgrades[pilot][i].replace(/\s/g,"");
+		for (j=0; j<upgradeCardArray.length; j++){
+			if(multipleChecker>1){
+				var selected=upgrades[pilot][i].replace(/\s/g,"");
+				selected+=i;
+			}
+			var restricted = isRestriction(pilot,upgradeCardArray[j]);
+			if(!restricted){
+				htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
+			}
+			
+			
+		}
+		htmlString+=("<li><a class='upgrade' id=" + selected + ">None</a></li></ul>"+"</span>");
+	
+	}
+	
+	return htmlString;
 }

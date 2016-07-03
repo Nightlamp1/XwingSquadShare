@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades, UpgradeRestrictions
+from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades, UpgradeRestrictions, UpgradeBonus
 from squadshare.models import SavedSquads
 import json
 
@@ -79,6 +79,7 @@ def squadbuilder(request):
                         else:
                             upgradeCardDict[upgradeType[0].replace(" ","")]=upgrade_builder
 
+            #Building JSON list of ship objects to be used to populate builder and control squad building as needed
             for ship in ships:
                 if any(d['name']==ship['name'] for d in ship_objects):
                     available_ships[ship['name']]['quantity']+=ship['quantity']
@@ -86,6 +87,7 @@ def squadbuilder(request):
                     ship_objects.append(ship)
                     available_ships[ship['name']]=ship
 
+            #Building JSON list of pilot objects to be used to populate builder and control squad building as needed
             for pilot in all_pilots:
                 if any((d['name']==pilot['name'] and d['faction']==pilot['faction'] and d['ship']==pilot['ship']) for d in pilot_objects):
                     for entry in pilot_objects:
@@ -97,10 +99,20 @@ def squadbuilder(request):
                     pilot_objects.append(pilot)
                     available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship']}
 
+            #Building JSON list of restriction objects to be used to limit what upgrade cards are visible to the user
             upgrade_restrictions = {}
             restriction_query = UpgradeRestrictions.objects.all()
             for restriction in restriction_query:
                 upgrade_restrictions[restriction.upgrade]={'restriction':restriction.restriction,'type':restriction.restriction_type}
+
+            #Building JSON list of upgrade bonus objects to be used to populate any additional effects given by upgrade cards
+            upgrade_bonus = {}
+            bonus_query = UpgradeBonus.objects.all()
+            for bonus in bonus_query:
+                if bonus.upgrade in upgrade_bonus:
+                    upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
+                else:
+                    upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[bonus.bonus.name]}
                 
             return render(request, 'squadbuilder/builder.html',{'ships':ship_objects,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),
@@ -108,9 +120,10 @@ def squadbuilder(request):
                                                                 'pilots':pilot_objects,
                                                                 'available_pilots':json.dumps(available_pilots),
                                                                 'available_ships':json.dumps(available_ships),
-                                                                'upgrade_restrictions':json.dumps(upgrade_restrictions)})
+                                                                'upgrade_restrictions':json.dumps(upgrade_restrictions),
+                                                                'upgrade_bonus':json.dumps(upgrade_bonus)})
     else:
-        exps = Expansions.objects.all()#will need to be owned expansions
+        exps = Expansions.objects.all()
         waves = Expansions.objects.order_by('wave').values_list('wave').distinct()
         return render(request, 'squadbuilder/selector.html',{'expansions':exps,'waves':waves})
         

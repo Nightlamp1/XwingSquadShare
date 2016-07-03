@@ -154,7 +154,7 @@ def squad(request, squadcode):
                         upgrade_array.append((upgrade.name).replace(" ",""))
                 pilot_dict.append(upgrade_array)
                 pilot_list.append(pilot_dict)
-            squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode})
+            squad_readout.append({'name':squad.name ,'list':pilot_list, 'squadcode':squad.squadcode, 'cost':squad.cost, 'creator':squad.user})
         return squad_readout
     
     if request.method == 'POST':

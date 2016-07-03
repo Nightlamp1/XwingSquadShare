@@ -9,7 +9,12 @@
 	</div>
 	<div class="panel-body">
 		{% for squad in user_squads %}
-			<p>{{squad.name}}--{{squad.id}}--{{squad.user}}--{{squad.createdDate}}</p>
+			<a href="/squad/{{squad.id}}">{{squad.name}}</a>
+			<p>{{squad.upvotes}}  
+				<span class="glyphicon glyphicon-thumbs-up" name="squad{{squad.id}}"></span>  
+				Likes
+				<br>Created on: {{squad.createdDate}}
+			</p>
 		{% endfor %}
 	</div>
 </div>

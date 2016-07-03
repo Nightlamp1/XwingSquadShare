@@ -53,7 +53,11 @@ $("button[type='pilotbutton']").click(function(){
 				var selected=upgrades[this.id][i].replace(/\s/g,"");
 				selected+=i;
 			}
-			htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
+			var restricted = isRestriction(this.id,upgradeCardArray[j]);
+			if(!restricted){
+				htmlString+= ("<li><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
+			}
+			
 			
 		}
 		htmlString+=("<li><a class='upgrade' id=" + selected + ">None</a></li></ul>"+"</span>");
@@ -198,4 +202,26 @@ function countUpgrade(pilotUpgrades, upgrade) {
         }
     }
     return count;
+}
+
+function isRestriction(currentPilot,currentUpgrade){
+	var restriction = upgrade_restrictions[currentUpgrade];
+	var pilot = available_pilots[currentPilot];
+	if (restriction === undefined){
+		return false;
+	}
+	else{
+		var type = restriction['type'].toLowerCase();
+		if(type =='action'){
+			return false;
+		}
+		else{
+			if(pilot[type]!=restriction['restriction']){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
 }

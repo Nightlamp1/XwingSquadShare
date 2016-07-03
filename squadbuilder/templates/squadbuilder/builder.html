@@ -5,12 +5,14 @@
 
 {% block content %}
 
+{{available_pilots}}
 <script type='text/javascript'>
 var upgrades = {{ upgrades|safe }};
 var pilotCost = {{pilotCost|safe}};
 var upgradeCardList = {{cards|safe}};
 var available_ships = {{available_ships|safe}};
 var available_pilots = {{available_pilots|safe}};
+var upgrade_restrictions = {{upgrade_restrictions|safe}};
 </script>
 
   <ul class="nav nav-tabs" role="tablist" id="mytabs">

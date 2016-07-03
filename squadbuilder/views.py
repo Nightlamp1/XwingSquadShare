@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades
+from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades, UpgradeRestrictions
 from squadshare.models import SavedSquads
 import json
 
@@ -95,14 +95,20 @@ def squadbuilder(request):
                             available_pilots[pilot['id']]['quantity']+=pilot['quantity']
                 else:
                     pilot_objects.append(pilot)
-                    available_pilots[pilot['id']]={'quantity':pilot['quantity']}
+                    available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship']}
+
+            upgrade_restrictions = {}
+            restriction_query = UpgradeRestrictions.objects.all()
+            for restriction in restriction_query:
+                upgrade_restrictions[restriction.upgrade]={'restriction':restriction.restriction,'type':restriction.restriction_type}
                 
             return render(request, 'squadbuilder/builder.html',{'ships':ship_objects,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),
                                                                 'cards':json.dumps(upgradeCardDict),
                                                                 'pilots':pilot_objects,
                                                                 'available_pilots':json.dumps(available_pilots),
-                                                                'available_ships':json.dumps(available_ships)})
+                                                                'available_ships':json.dumps(available_ships),
+                                                                'upgrade_restrictions':json.dumps(upgrade_restrictions)})
     else:
         exps = Expansions.objects.all()#will need to be owned expansions
         waves = Expansions.objects.order_by('wave').values_list('wave').distinct()

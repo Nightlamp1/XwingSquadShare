@@ -62,4 +62,7 @@ class Pilot2Upgrades(models.Model):
     def __str__(self):
         return self.upgrade.name
     
-    
+class UpgradeRestrictions(models.Model):
+    upgrade = models.CharField(max_length=50)
+    restriction = models.CharField(max_length=50)
+    restriction_type = models.CharField(max_length=20)

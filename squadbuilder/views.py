@@ -52,6 +52,8 @@ def squadbuilder(request):
                                 pilotID+="Scum"
                             elif pilot.ship.name == "VCX-100":
                                 pilotID+="VCX"
+                            elif pilot.ship.name == "TIE-Defender":
+                                pilotID+="Defender"
                             all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity*expansion[1],'faction':pilot.faction})
                             upgrade_query = Pilot2Upgrades.objects.select_related('upgrade').filter(pilot=pilot)
                             for upgrade in upgrade_query:

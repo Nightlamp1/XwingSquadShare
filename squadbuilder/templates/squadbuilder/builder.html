@@ -5,7 +5,7 @@
 
 {% block content %}
 
-{{upgrade_bonus}}
+{{cards}}
 <script type='text/javascript'>
 var upgrades = {{ upgrades|safe }};
 var pilotCost = {{pilotCost|safe}};
@@ -38,17 +38,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		
 		
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name and pilot.faction == "Rebels"%}
+			
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
-						<label >
+					{% for pilot in pilots %}
+					{% if pilot.ship == ship.name and pilot.faction == "Rebels"%}
+						<label id="{{pilot.id}}">
 							<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
+					{% endif %}
+					{% endfor %}
 					</div>
 				</div>
-			{% endif %}
-			{% endfor %}
+			
 		</div>
 
 	  </div>
@@ -69,17 +71,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		</div>
 	
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name and pilot.faction == "Empire"%}
+		
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
-						<label >
+					{% for pilot in pilots %}
+					{% if pilot.ship == ship.name and pilot.faction == "Empire"%}
+						<label id="{{pilot.id}}">
 						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
+					{% endif %}
+					{% endfor %}
 					</div>
 				</div>
-			{% endif %}
-			{% endfor %}
+			
 		</div>
 
 	  </div>
@@ -100,17 +104,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		</div>
 	
 		<div id="collapse{{ship.name}}Scum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-			{% for pilot in pilots %}
-			{% if pilot.ship == ship.name and pilot.faction == "Scum"%}
+			
 				<div class="list-group">
 					<div class="btn-group" data-toggle="buttons">
-						<label >
+					{% for pilot in pilots %}
+					{% if pilot.ship == ship.name and pilot.faction == "Scum"%}
+						<label id="{{pilot.id}}">
 						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
 						</label>
+						{% endif %}
+					{% endfor %}
 					</div>
 				</div>
-			{% endif %}
-			{% endfor %}
+			
 		</div>
 
 	  </div>

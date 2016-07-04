@@ -97,7 +97,7 @@ def squadbuilder(request):
                             available_pilots[pilot['id']]['quantity']+=pilot['quantity']
                 else:
                     pilot_objects.append(pilot)
-                    available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship']}
+                    available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship'], 'code':pilot['code'], 'cost':pilot['cost'], 'name':pilot['name']}
 
             #Building JSON list of restriction objects to be used to limit what upgrade cards are visible to the user
             upgrade_restrictions = {}
@@ -113,6 +113,10 @@ def squadbuilder(request):
                     upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
                 else:
                     upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[bonus.bonus.name]}
+                    if bonus.bonus_quantity > 1:
+                        for item in range(1,bonus.bonus_quantity):
+                            upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
+                            
                 
             return render(request, 'squadbuilder/builder.html',{'ships':ship_objects,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),

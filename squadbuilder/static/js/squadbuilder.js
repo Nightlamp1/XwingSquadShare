@@ -67,6 +67,22 @@ $(document.body).on('click','[type=pilotbutton]',function(){
 
 $("#mytabs").click(function (e){
 	$("input:checkbox").prop('checked', false);
+	$("div.pilot").each(function(){
+		var pilot = $(this).attr('id');
+		available_pilots[pilot]['quantity']+=1;
+		var code = available_pilots[pilot]['code'];
+		var name = available_pilots[pilot]['name'];
+		var pCost = available_pilots[pilot]['cost'];
+		$("label#" + this.id).html("<button type='pilotbutton' class='btn btn-default' id=" + this.id + " name=p"+code +"><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>" + name + "-" + pCost + "</button>");
+	});
+	$("img.upgrade").each(function(){
+		var pilot = $(this).parent().parent().attr('id');
+		var reg = new RegExp(pilot, "g");
+		var upgrade_type = ($(this).parent().attr('class')).replace(reg,"");
+		upgrade_type = upgrade_type.replace(/[0-9]/g,"");
+		var upgrade = $(this).attr('name').replace(/--/g," ");
+		updateUpgradeQty(upgrade,upgrade_type,true);
+	});
 	$("#squad").empty();
 	cost = 0;
 	updateCostDisplay(cost);
@@ -82,8 +98,10 @@ $(document.body).on('click','.upgrade',function(){
 	var upgradeId = $(this).attr('id');
 	var upgradeType = upgradeId.replace(/[0-9]/g,"");
 	var upgradeCost=0;
+	var isRemoving = false;
 	
 	if(selectedUpgrade=="None"){
+		isRemoving = true;
 		upgradeCost=$(this).closest('div').siblings("."+upgradeId+pilot).data("cost");
 		if(upgradeCost == null){
 			upgradeCost=0;
@@ -95,15 +113,17 @@ $(document.body).on('click','.upgrade',function(){
 		
 	}
 	else if($(this).closest('div').siblings("."+upgradeId+pilot).length==0){
+		isRemoving = false;
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 
-		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost",upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 		updateUpgradeQty(upgradeEval,upgradeType,false);
 	}
 	else{
+		isRemoving = true;
 		upgradeCost=$(this).closest('div').siblings("."+upgradeId+pilot).data("cost");
 		updateCostDisplay(cost-=upgradeCost);
 		removeEval = $(this).closest('div').siblings("."+upgradeId+pilot).children("img").attr('name');
@@ -112,15 +132,31 @@ $(document.body).on('click','.upgrade',function(){
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 		updateUpgradeQty(upgradeEval,upgradeType,false);
 	}
 	
-	if(bonusCheck(selectedUpgrade)){
+	
+	
+	if(bonusCheck(upgradeEval) || bonusCheck(removeEval)){
+		upgradeEval = upgradeEval.replace(/--/g," ");
 		$("div#" + pilot + "upgrades").empty();
-		htmlString=generateUpgradeHtml(pilot,true,upgrade_bonus[selectedUpgrade]['bonus']);
+		if(isRemoving){
+			removeEval = removeEval.replace(/--/g," ");
+			console.log("removing");
+			for(i=0; i<upgrade_bonus[removeEval]['bonus'].length;i++){
+				console.log(i)
+				console.log("going to remove last element  " + upgrades[pilot][(upgrades[pilot].length)-(i+1)]);
+				upgrades[pilot].splice(upgrades[pilot].length-(i+1),1);
+				
+			}
+			htmlString=generateUpgradeHtml(pilot,false,[]);
+		}else{
+			htmlString=generateUpgradeHtml(pilot,true,upgrade_bonus[upgradeEval]['bonus']);	
+		}
+		
 		$("div#" + pilot + "upgrades").html(htmlString);
 
 	}
@@ -231,6 +267,7 @@ function isRestriction(currentPilot,currentUpgrade){
 }
 
 function bonusCheck(currentUpgrade){
+	currentUpgrade = currentUpgrade.replace(/--/g," ");
 	var checker = upgrade_bonus[currentUpgrade];
 	if (checker === undefined){
 		return false;
@@ -272,7 +309,10 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 			var restricted = isRestriction(pilot,upgradeCardArray[j]);
 			if(!restricted){
 				//tester = tester.replace(/\*/g," ");
-				htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
+				if(upgradeCardList[upgrades[pilot][i]][upgradeCardArray[j]]['quantity']>0){
+					htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
+				}
+				
 			}
 			
 			
@@ -285,22 +325,17 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 }
 
 function updateUpgradeQty(upgrade,type,isRemove){
-	console.log(upgrade + " Qty WILL BE UPDATED");
 	upgradeConverted=upgrade.replace(/\--/g," ");
-	console.log("it is a upgrade of type  "+ type);
 	if(isRemove){
-		console.log("will be removed");
 		upgradeCardList[type][upgradeConverted]['quantity']+=1;
-		console.log(upgrade + " is back at " + upgradeCardList[type][upgradeConverted]['quantity']);
+		console.log(upgradeCardList[type][upgradeConverted]['quantity']);
 		if(upgradeCardList[type][upgradeConverted]['quantity']==1){
 			$("li#"+upgrade).html("<a class='upgrade' id=" + type + ">" + upgradeConverted + "</a>");
 		}
 	}else{
-		console.log("will be added");
 		upgradeCardList[type][upgradeConverted]['quantity']-=1;
-		console.log(upgradeConverted + " is now at " + upgradeCardList[type][upgradeConverted]['quantity']);
+		console.log(upgradeCardList[type][upgradeConverted]['quantity']);
 		if(upgradeCardList[type][upgradeConverted]['quantity']==0){
-			console.log($("li#"+upgrade));
 			$("li#"+upgrade).empty();
 		}
 	}

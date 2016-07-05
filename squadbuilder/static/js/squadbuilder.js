@@ -326,6 +326,7 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 
 function updateUpgradeQty(upgrade,type,isRemove){
 	upgradeConverted=upgrade.replace(/\--/g," ");
+	type = type.replace(/[0-9]/g,"");
 	if(isRemove){
 		upgradeCardList[type][upgradeConverted]['quantity']+=1;
 		console.log(upgradeCardList[type][upgradeConverted]['quantity']);

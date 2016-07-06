@@ -151,12 +151,8 @@ $(document.body).on('click','.upgrade',function(){
 		$("div#" + pilot + "upgrades").empty();
 		if(isRemoving){
 			removeEval = removeEval.replace(/--/g," ");
-			console.log("removing");
 			for(i=0; i<upgrade_bonus[removeEval]['bonus'].length;i++){
-				console.log(i)
-				console.log("going to remove last element  " + upgrades[pilot][(upgrades[pilot].length)-(i+1)]);
-				upgrades[pilot].splice(upgrades[pilot].length-(i+1),1);
-				
+				upgrades[pilot].splice(upgrades[pilot].length-(i+1),1);	
 			}
 			htmlString=generateUpgradeHtml(pilot,false,[]);
 		}else{
@@ -286,9 +282,8 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 	var htmlString = "<button id=" + pilot + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
 	var pilotUpgradeList = upgrades[pilot];
 	if(isBonus){
-		console.log("Thar be a bonus");
 		for(i=0;i<bonusArray.length; i++){
-			pilotUpgradeList.push(bonusArray[i]);
+			pilotUpgradeList.push(bonusArray[i]);//bonusArray[i][0] will be the bonus, bonusArray[i][1] will be the type
 		}
 	}
 	for (i=0; i<pilotUpgradeList.length; i++){

@@ -10,9 +10,8 @@ var cost = 0;
 //var upgrade_bonus = {{upgrade_bonus|safe}}; A dict of misc upgrade bonuses
 
 $(document).ready(function() {
-	//Initialize cost and popover functionality
+	//Initialize cost display
 	$("#cost").text(cost +"/100");
-	$('#popover').popover();
 	
 });
 
@@ -31,38 +30,41 @@ $(document.body).on('click','[type=deletepilot]',function(){
 	//$(this).parent().parent().remove();
 	cost-=pilotCost[this.id];
 	updateCostDisplay(cost);
-
-	console.log(this.id);
+	//Increment the available_pilots qty by 1 for pilot being removed
+	//Add pilot html selection button if it was previously removed
 	available_pilots[this.id]['quantity']+=1;
 	if(available_pilots[this.id]['quantity']==1){
 		var code = available_pilots[this.id]['code'];
 		var name = available_pilots[this.id]['name'];
 		var pCost = available_pilots[this.id]['cost'];
-		$("label#" + this.id).html("<button type='pilotbutton' class='btn btn-default' id=" + this.id + " name=p"+code +"><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>" + name + "-" + pCost + "</button>");
+		$("label#" + this.id).html("<button type='pilotbutton' class='btn btn-default' id=" + this.id + " name=p"+code +">"+
+									"<span class='glyphicon glyphicon-plus' aria-hidden='true'></span>" + name + "-" + pCost + "</button>");
 	}
+	//Remove pilot html object
 	$(this).parent().parent().remove();
 });
 
 
 
 $(document.body).on('click','[type=pilotbutton]',function(){
-
+	//Generate upgrade html lists for selected pilot
 	var htmlString = "<div id=" + this.id + "upgrades>";
 	htmlString += generateUpgradeHtml(this.id,false,[]);
 	htmlString+="</div><br>";
-
+	//Add pilot object to squad viewer
 	$("#squad").append("<div class=pilot id=" + this.id + ' name=' + this.name +">" + 
 						'<img src="/static/img/Pilots/' + this.id + '.jpg" height=259px width=200px>' + 
 						htmlString + "</div>");
-						
+	
+	//Decrement available_pilot qty by 1 for pilot being added
+	//Remove select pilot button if available_pilot qty is 0
 	available_pilots[this.id]['quantity']-=1;
 	if(available_pilots[this.id]['quantity']==0){
 		$("label#"+this.id).empty();
 	}
-
+	//Increase squad cost and update cost display
 	cost+=pilotCost[this.id];
-	updateCostDisplay(cost);
-	
+	updateCostDisplay(cost);	
 });
 
 $("#mytabs").click(function (e){
@@ -73,7 +75,8 @@ $("#mytabs").click(function (e){
 		var code = available_pilots[pilot]['code'];
 		var name = available_pilots[pilot]['name'];
 		var pCost = available_pilots[pilot]['cost'];
-		$("label#" + this.id).html("<button type='pilotbutton' class='btn btn-default' id=" + this.id + " name=p"+code +"><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>" + name + "-" + pCost + "</button>");
+		$("label#" + this.id).html("<button type='pilotbutton' class='btn btn-default' id=" + this.id + " name=p"+code +">"+
+									"<span class='glyphicon glyphicon-plus' aria-hidden='true'></span>" + name + "-" + pCost + "</button>");
 	});
 	$("img.upgrade").each(function(){
 		var pilot = $(this).parent().parent().attr('id');
@@ -109,15 +112,16 @@ $(document.body).on('click','.upgrade',function(){
 		removeEval = $(this).closest('div').siblings("."+upgradeId+pilot).children("img").attr('name');
 		updateUpgradeQty(removeEval,upgradeType,true);
 		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
-		updateCostDisplay(cost-=upgradeCost);
-		
+		updateCostDisplay(cost-=upgradeCost);	
 	}
 	else if($(this).closest('div').siblings("."+upgradeId+pilot).length==0){
 		isRemoving = false;
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 
-		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> '+
+									  '<img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +
+									  ' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost",upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 		updateUpgradeQty(upgradeEval,upgradeType,false);
@@ -132,7 +136,9 @@ $(document.body).on('click','.upgrade',function(){
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
-		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> <img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
+		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> ' + 
+									  '<img class="upgrade" name=' + upgradeEval + ' id=' + selectedUpgrade +
+									  ' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
 		updateUpgradeQty(upgradeEval,upgradeType,false);
@@ -156,9 +162,7 @@ $(document.body).on('click','.upgrade',function(){
 		}else{
 			htmlString=generateUpgradeHtml(pilot,true,upgrade_bonus[upgradeEval]['bonus']);	
 		}
-		
 		$("div#" + pilot + "upgrades").html(htmlString);
-
 	}
 });
 
@@ -291,12 +295,14 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 		htmlString += ("<span class='dropup'>");
 		multipleChecker = countUpgrade(upgrades[pilot],upgrades[pilot][i]);
 		if(multipleChecker > 1){
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + i + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-			"<ul class='dropdown-menu' aria-labelledby='test'>");
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + i +
+						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
+						   "<ul class='dropdown-menu' aria-labelledby='test'>");
 		}
 		else{
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-			"<ul class='dropdown-menu' aria-labelledby='test'>");
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + 
+						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
+						   "<ul class='dropdown-menu' aria-labelledby='test'>");
 		}
 		
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
@@ -308,19 +314,13 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 			}
 			var restricted = isRestriction(pilot,upgradeCardArray[j]);
 			if(!restricted){
-				//tester = tester.replace(/\*/g," ");
 				if(upgradeCardList[upgrades[pilot][i]][upgradeCardArray[j]]['quantity']>0){
 					htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 				}
-				
-			}
-			
-			
+			}	
 		}
 		htmlString+=("<li><a class='upgrade' id=" + selected + ">None</a></li></ul>"+"</span>");
-	
 	}
-	
 	return htmlString;
 }
 
@@ -339,7 +339,5 @@ function updateUpgradeQty(upgrade,type,isRemove){
 		if(upgradeCardList[type][upgradeConverted]['quantity']==0){
 			$("li#"+upgrade).empty();
 		}
-	}
-	
-	
+	}	
 }

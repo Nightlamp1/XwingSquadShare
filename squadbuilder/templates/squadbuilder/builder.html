@@ -27,7 +27,7 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 	
 	{% for ship in ships%}
 	{% if ship.faction == "Rebels"%}
-	  <div class="panel panel-default">
+	<div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="headingOne">
 		  <h4 class="panel-title">
 			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ship.name}}" aria-expanded="false" aria-controls="collapse{{ship.name}}">
@@ -38,22 +38,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		
 		
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-			
-				<div class="list-group">
-					<div class="btn-group" data-toggle="buttons">
+			<div class="list-group">
+				<div class="btn-group" data-toggle="buttons">
 					{% for pilot in pilots %}
 					{% if pilot.ship == ship.name and pilot.faction == "Rebels"%}
-						<label id="{{pilot.id}}">
-							<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
-						</label>
+					<label id="{{pilot.id}}">
+						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
+					</label>
 					{% endif %}
 					{% endfor %}
-					</div>
 				</div>
-			
+			</div>
 		</div>
-
-	  </div>
+	</div>
 	{% endif %}
 	{% endfor %}
 	</div>
@@ -61,7 +58,7 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 	<div role="tabpanel" class="tab-pane" id="profile">
 	{% for ship in ships%}
 	{% if ship.faction == "Empire"%}
-	  <div class="panel panel-default">
+	<div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="headingOne">
 		  <h4 class="panel-title">
 			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ship.name}}" aria-expanded="false" aria-controls="collapse{{ship.name}}">
@@ -71,22 +68,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		</div>
 	
 		<div id="collapse{{ship.name}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-		
-				<div class="list-group">
-					<div class="btn-group" data-toggle="buttons">
-					{% for pilot in pilots %}
-					{% if pilot.ship == ship.name and pilot.faction == "Empire"%}
-						<label id="{{pilot.id}}">
-						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
-						</label>
-					{% endif %}
-					{% endfor %}
-					</div>
+			<div class="list-group">
+				<div class="btn-group" data-toggle="buttons">
+				{% for pilot in pilots %}
+				{% if pilot.ship == ship.name and pilot.faction == "Empire"%}
+					<label id="{{pilot.id}}">
+					<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
+					</label>
+				{% endif %}
+				{% endfor %}
 				</div>
-			
+			</div>	
 		</div>
-
-	  </div>
+	</div>
 	{% endif %}
 	{% endfor %}
 	</div>
@@ -94,7 +88,7 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 	<div role="tabpanel" class="tab-pane" id="messages">
 	{% for ship in ships%}
 	{% if ship.faction == "Scum" or ship.altFaction == "Scum"%}
-	  <div class="panel panel-default">
+	<div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="headingOne">
 		  <h4 class="panel-title">
 			<a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ship.name}}Scum" aria-expanded="false" aria-controls="collapse{{ship.name}}Scum">
@@ -104,22 +98,19 @@ var upgrade_bonus = {{upgrade_bonus|safe}};
 		</div>
 	
 		<div id="collapse{{ship.name}}Scum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-			
-				<div class="list-group">
-					<div class="btn-group" data-toggle="buttons">
-					{% for pilot in pilots %}
-					{% if pilot.ship == ship.name and pilot.faction == "Scum"%}
-						<label id="{{pilot.id}}">
-						<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
-						</label>
-						{% endif %}
-					{% endfor %}
-					</div>
+			<div class="list-group">
+				<div class="btn-group" data-toggle="buttons">
+				{% for pilot in pilots %}
+				{% if pilot.ship == ship.name and pilot.faction == "Scum"%}
+					<label id="{{pilot.id}}">
+					<button type="pilotbutton" class="btn btn-default" id="{{pilot.id}}" name="p{{pilot.code}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{pilot.name}}-{{pilot.cost}}</button>
+					</label>
+					{% endif %}
+				{% endfor %}
 				</div>
-			
+			</div>
 		</div>
-
-	  </div>
+	</div>
 	{% endif %}
 	{% endfor %}
 	</div>

@@ -114,7 +114,7 @@ def squadbuilder(request):
                 if bonus.upgrade in upgrade_bonus:
                     upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
                 else:
-                    upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[bonus.bonus.name]}
+                    upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[bonus.bonus.name]}#here add type
                     if bonus.bonus_quantity > 1:
                         for item in range(1,bonus.bonus_quantity):
                             upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)

@@ -110,7 +110,7 @@ $(document.body).on('click','.upgrade',function(){
 			upgradeCost=0;
 		}
 		removeEval = $(this).closest('div').siblings("."+upgradeId+pilot).children("img").attr('name');
-		updateUpgradeQty(removeEval,upgradeType,true);
+		updateUpgradeQty(removeEval,upgradeId,true);
 		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
 		updateCostDisplay(cost-=upgradeCost);	
 	}
@@ -124,14 +124,14 @@ $(document.body).on('click','.upgrade',function(){
 									  ' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost",upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
-		updateUpgradeQty(upgradeEval,upgradeType,false);
+		updateUpgradeQty(upgradeEval,upgradeId,false);
 	}
 	else{
 		isRemoving = true;
 		upgradeCost=$(this).closest('div').siblings("."+upgradeId+pilot).data("cost");
 		updateCostDisplay(cost-=upgradeCost);
 		removeEval = $(this).closest('div').siblings("."+upgradeId+pilot).children("img").attr('name');
-		updateUpgradeQty(removeEval,upgradeType,true);
+		updateUpgradeQty(removeEval,upgradeId,true);
 		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
 		
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
@@ -141,7 +141,7 @@ $(document.body).on('click','.upgrade',function(){
 									  ' src="/static/img/Upgrades/' +selectedUpgrade+'.jpg" height=209px width=150px></span>');
 		$(this).closest('div').siblings("."+upgradeId+pilot).data("cost", upgradeCost);
 		updateCostDisplay(cost+=upgradeCost);
-		updateUpgradeQty(upgradeEval,upgradeType,false);
+		updateUpgradeQty(upgradeEval,upgradeId,false);
 	}
 	
 	
@@ -292,12 +292,12 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 		if(multipleChecker > 1){
 			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + i +
 						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-						   "<ul class='dropdown-menu' aria-labelledby='test'>");
+						   "<ul class='dropdown-menu' type="+ upgrades[pilot][i] + i + " aria-labelledby='test'>");
 		}
 		else{
 			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + 
 						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-						   "<ul class='dropdown-menu' aria-labelledby='test'>");
+						   "<ul class='dropdown-menu' type="+ upgrades[pilot][i] +" aria-labelledby='test'>");
 		}
 		
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
@@ -321,17 +321,22 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 
 function updateUpgradeQty(upgrade,type,isRemove){
 	upgradeConverted=upgrade.replace(/\--/g," ");
-	type = type.replace(/[0-9]/g,"");
+	var typeHtmlId = type;
+	var typeCleaned = type.replace(/[0-9]/g,"");
 	if(isRemove){
-		upgradeCardList[type][upgradeConverted]['quantity']+=1;
-		console.log(upgradeCardList[type][upgradeConverted]['quantity']);
-		if(upgradeCardList[type][upgradeConverted]['quantity']==1){
-			$("li#"+upgrade).html("<a class='upgrade' id=" + type + ">" + upgradeConverted + "</a>");
+		upgradeCardList[typeCleaned][upgradeConverted]['quantity']+=1;
+		console.log(upgradeCardList[typeCleaned][upgradeConverted]['quantity']);
+		if(upgradeCardList[typeCleaned][upgradeConverted]['quantity']==1){
+			$("li#"+upgrade).each(function(){
+				console.log($(this).parent().attr('type'));
+				typeHtmlId=$(this).parent().attr('type');
+				$(this).html("<a class='upgrade' id=" + typeHtmlId + ">" + upgradeConverted + "</a>");
+			});
 		}
 	}else{
-		upgradeCardList[type][upgradeConverted]['quantity']-=1;
-		console.log(upgradeCardList[type][upgradeConverted]['quantity']);
-		if(upgradeCardList[type][upgradeConverted]['quantity']==0){
+		upgradeCardList[typeCleaned][upgradeConverted]['quantity']-=1;
+		console.log(upgradeCardList[typeCleaned][upgradeConverted]['quantity']);
+		if(upgradeCardList[typeCleaned][upgradeConverted]['quantity']==0){
 			$("li#"+upgrade).empty();
 		}
 	}	

@@ -319,7 +319,9 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 			}
 			var restricted = isRestriction(pilot,upgradeCardArray[j]);
 			if(!restricted){
-				if(upgradeCardList[pilotUpgradeList[i]][upgradeCardArray[j]]['quantity']>0){
+				console.log(pilotUpgradeList[i]);
+				console.log(selected);
+				if(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")][upgradeCardArray[j]]['quantity']>0){
 					htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 				}
 			}	

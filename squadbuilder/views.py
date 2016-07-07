@@ -17,7 +17,7 @@ def squadbuilder(request):
             new_squad = SavedSquads(name=squadname, user=current_user, squadcode=squadcode, upvotes=0, cost=cost)
             new_squad.save()
             #squadname cleanup here in the future
-            return render(request, 'squadbuilder/squadviewer.html',{'squadcode':squadcode,'squadname':squadname})
+            return render(request, 'squadbuilder/squadviewer.html',{'squadcode':squadcode,'squadname':squadname, 'squadid':new_squad.id})
         else:
             selected_expansions=request.POST.getlist('expansionCode')
             selected_expansions_conversion = []
@@ -54,7 +54,7 @@ def squadbuilder(request):
                                 pilotID+="VCX"
                             elif pilot.ship.name == "TIE-Defender":
                                 pilotID+="Defender"
-                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity*expansion[1],'faction':pilot.faction})
+                            all_pilots.append({'code':pilot.id,'id':pilotID,'name':pilot.name,'cost':pilot.pilotCost,'ship':pilot.ship.name,'quantity':pilot.quantity*expansion[1],'faction':pilot.faction,'unique':pilot.isUnique})
                             upgrade_query = Pilot2Upgrades.objects.select_related('upgrade').filter(pilot=pilot)
                             for upgrade in upgrade_query:
                                 if upgrade.quantity > 1:
@@ -70,9 +70,9 @@ def squadbuilder(request):
                 for upgradeType in types:
                     if int(expansion[1]) >0:
                         upgrade_builder={}
-                        upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0],expansion=(expansion[0])).values_list('name','upgradeCost','id','quantity'))
+                        upgrade_attributes=list(Upgrades.objects.filter(upgradetype__name=upgradeType[0],expansion=(expansion[0])).values_list('name','upgradeCost','id','quantity','isUnique'))
                         for attribute in upgrade_attributes:
-                             upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2],'quantity':attribute[3]*expansion[1]}
+                             upgrade_builder[attribute[0]]={'cost':attribute[1],'code':attribute[2],'quantity':attribute[3]*expansion[1],'unique':attribute[4]}
                              if upgradeType[0] in upgradeCardDict:
                                  if attribute[0] in upgradeCardDict[upgradeType[0]]:
                                      upgrade_builder[attribute[0]]['quantity']+=upgradeCardDict[upgradeType[0]][attribute[0]]['quantity']
@@ -99,7 +99,7 @@ def squadbuilder(request):
                             available_pilots[pilot['id']]['quantity']+=pilot['quantity']
                 else:
                     pilot_objects.append(pilot)
-                    available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship'], 'code':pilot['code'], 'cost':pilot['cost'], 'name':pilot['name']}
+                    available_pilots[pilot['id']]={'quantity':pilot['quantity'],'faction':pilot['faction'],'ship':pilot['ship'], 'code':pilot['code'], 'cost':pilot['cost'], 'name':pilot['name'],'unique':pilot['unique']}
 
             #Building JSON list of restriction objects to be used to limit what upgrade cards are visible to the user
             upgrade_restrictions = {}

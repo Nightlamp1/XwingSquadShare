@@ -23,7 +23,6 @@ $(document.body).on('click','[type=deletepilot]',function(){
 		var reg = new RegExp(current_pilot, "g");
 		var upgrade_type = $(this).attr('class').replace(reg,"");
 		updateUpgradeQty(removeEval,upgrade_type,true);
-		console.log($(this).data('cost'));
 		cost-=$(this).data('cost');
 	});
 	//Remove the pilot html objects and subtract pilot cost from total cost
@@ -101,6 +100,7 @@ $(document.body).on('click','.upgrade',function(){
 	var upgradeId = $(this).attr('id');
 	var upgradeType = upgradeId.replace(/[0-9]/g,"");
 	var upgradeCost=0;
+	var removeEval = "";
 	var isRemoving = false;
 	
 	if(selectedUpgrade=="None"){
@@ -133,7 +133,7 @@ $(document.body).on('click','.upgrade',function(){
 		removeEval = $(this).closest('div').siblings("."+upgradeId+pilot).children("img").attr('name');
 		updateUpgradeQty(removeEval,upgradeId,true);
 		$(this).closest('div').siblings("."+upgradeId+pilot).remove();
-		
+		isRemoving = false;
 		upgradeCost=upgradeCardList[upgradeType][$(this).text()]['cost'];
 		upgradeCode=upgradeCardList[upgradeType][$(this).text()]['code'];
 		$(this).closest('div').before('<span class=' + upgradeId + pilot + ' name=u' + upgradeCode + '> ' + 
@@ -145,14 +145,21 @@ $(document.body).on('click','.upgrade',function(){
 	}
 	
 	
-	
+	domObject = $(this).closest('div');
 	if(bonusCheck(upgradeEval) || bonusCheck(removeEval)){
 		upgradeEval = upgradeEval.replace(/--/g," ");
 		$("div#" + pilot + "upgrades").empty();
 		if(isRemoving){
 			removeEval = removeEval.replace(/--/g," ");
 			for(i=0; i<upgrade_bonus[removeEval]['bonus'].length;i++){
-				upgrades[pilot].splice(upgrades[pilot].length-(i+1),1);	
+				var bonusId = upgrade_bonus[removeEval]['bonus'][i];//May need to add indexing here
+				upgradeCost=domObject.siblings("."+bonusId+pilot).data("cost");
+				if(typeof upgradeCost !== "undefined"){
+					updateCostDisplay(cost-=upgradeCost);
+					upgradeToDelete = domObject.siblings("."+bonusId+pilot).children("img").attr('name').replace(/--/g," ");
+					updateUpgradeQty(upgradeToDelete,bonusId,true);
+					domObject.siblings("."+bonusId+pilot).remove();
+				}	
 			}
 			htmlString=generateUpgradeHtml(pilot,false,[]);
 		}else{
@@ -280,7 +287,10 @@ function bonusCheck(currentUpgrade){
 function generateUpgradeHtml(pilot,isBonus,bonusArray){
 	
 	var htmlString = "<button id=" + pilot + " type='deletepilot' class='btn btn-danger'>Remove Pilot</button> <h4>Choose Upgrades:</h4>";
-	var pilotUpgradeList = upgrades[pilot];
+	var pilotUpgradeList = [];
+	for(i=0;i<upgrades[pilot].length;i++){
+		pilotUpgradeList.push(upgrades[pilot][i]);
+	}
 	if(isBonus){
 		for(i=0;i<bonusArray.length; i++){
 			pilotUpgradeList.push(bonusArray[i]);//bonusArray[i][0] will be the bonus, bonusArray[i][1] will be the type
@@ -288,28 +298,28 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 	}
 	for (i=0; i<pilotUpgradeList.length; i++){
 		htmlString += ("<span class='dropup'>");
-		multipleChecker = countUpgrade(upgrades[pilot],upgrades[pilot][i]);
+		multipleChecker = countUpgrade(pilotUpgradeList,pilotUpgradeList[i]);
 		if(multipleChecker > 1){
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + i +
-						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-						   "<ul class='dropdown-menu' type="+ upgrades[pilot][i] + i + " aria-labelledby='test'>");
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + pilotUpgradeList[i] + i +
+						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ pilotUpgradeList[i] + "</button>"+
+						   "<ul class='dropdown-menu' type="+ pilotUpgradeList[i] + i + " aria-labelledby='test'>");
 		}
 		else{
-			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + upgrades[pilot][i] + 
-						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ upgrades[pilot][i] + "</button>"+
-						   "<ul class='dropdown-menu' type="+ upgrades[pilot][i] +" aria-labelledby='test'>");
+			htmlString += ("<button type='button' class='btn btn-default dropdown-toggle' id=" + pilot + pilotUpgradeList[i] + 
+						   " data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"+ pilotUpgradeList[i] + "</button>"+
+						   "<ul class='dropdown-menu' type="+ pilotUpgradeList[i] +" aria-labelledby='test'>");
 		}
 		
 		upgradeCardArray=Object.keys(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")]);
-		var selected=upgrades[pilot][i].replace(/\s/g,"");
+		var selected=pilotUpgradeList[i].replace(/\s/g,"");
 		for (j=0; j<upgradeCardArray.length; j++){
 			if(multipleChecker>1){
-				var selected=upgrades[pilot][i].replace(/\s/g,"");
+				var selected=pilotUpgradeList[i].replace(/\s/g,"");
 				selected+=i;
 			}
 			var restricted = isRestriction(pilot,upgradeCardArray[j]);
 			if(!restricted){
-				if(upgradeCardList[upgrades[pilot][i]][upgradeCardArray[j]]['quantity']>0){
+				if(upgradeCardList[pilotUpgradeList[i]][upgradeCardArray[j]]['quantity']>0){
 					htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 				}
 			}	
@@ -325,17 +335,14 @@ function updateUpgradeQty(upgrade,type,isRemove){
 	var typeCleaned = type.replace(/[0-9]/g,"");
 	if(isRemove){
 		upgradeCardList[typeCleaned][upgradeConverted]['quantity']+=1;
-		console.log(upgradeCardList[typeCleaned][upgradeConverted]['quantity']);
 		if(upgradeCardList[typeCleaned][upgradeConverted]['quantity']==1){
 			$("li#"+upgrade).each(function(){
-				console.log($(this).parent().attr('type'));
 				typeHtmlId=$(this).parent().attr('type');
 				$(this).html("<a class='upgrade' id=" + typeHtmlId + ">" + upgradeConverted + "</a>");
 			});
 		}
 	}else{
 		upgradeCardList[typeCleaned][upgradeConverted]['quantity']-=1;
-		console.log(upgradeCardList[typeCleaned][upgradeConverted]['quantity']);
 		if(upgradeCardList[typeCleaned][upgradeConverted]['quantity']==0){
 			$("li#"+upgrade).empty();
 		}

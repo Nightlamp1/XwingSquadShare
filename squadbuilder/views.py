@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from squadbuilder.models import Expansions,Pilots,Ships,Pilot2Upgrades, UpgradeTypes, Upgrades, UpgradeRestrictions, UpgradeBonus
 from squadshare.models import SavedSquads
+from django.db.models import Q
 import json
 
 
@@ -41,9 +42,16 @@ def squadbuilder(request):
             for expansion in selected_expansions_conversion: #expansion[0]=expansion id, expansion[1]=quantity
                 if int(expansion[1]) > 0:
                     ship_query = Ships.objects.all().filter(expansion=(expansion[0]))
+                    exp = Expansions.objects.get(id=expansion[0])
+                    if exp.name == "Most Wanted Expansion Pack":
+                        print("adding extra")
+                        ship_query = Ships.objects.all().filter(Q(expansion=expansion[0])|Q(name="Firespray-31")|Q(name="HWK-290"))
+                        print(ship_query)
+
                     for ship in ship_query:
                         ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity*expansion[1], 'altFaction':ship.altFaction})
                         pilots = Pilots.objects.all().filter(expansion=(expansion[0]),ship=ship)
+                        
                         for pilot in pilots:
                             upgrades=[]
                             pilotID=pilot.name.replace(" ","")
@@ -95,7 +103,6 @@ def squadbuilder(request):
                     for entry in pilot_objects:
                         if pilot['name']==entry['name'] and pilot['faction']==entry['faction']:
                             entry['quantity']+=pilot['quantity']
-                            print(pilot)
                             available_pilots[pilot['id']]['quantity']+=pilot['quantity']
                 else:
                     pilot_objects.append(pilot)

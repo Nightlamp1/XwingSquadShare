@@ -295,12 +295,9 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 		
 		for(i=0;i<bonusArray.length; i++){
 			if(bonusArray[i][1]=="remove"){
-				console.log("this will be removed");
-				console.log(pilotUpgradeList);
 				var upgrade_index = pilotUpgradeList.indexOf(bonusArray[i][0]);
 				if (upgrade_index >= 0){
 					pilotUpgradeList.splice(upgrade_index,1);
-					console.log(pilotUpgradeList);
 				}
 			}
 			else{

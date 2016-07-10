@@ -44,9 +44,7 @@ def squadbuilder(request):
                     ship_query = Ships.objects.all().filter(expansion=(expansion[0]))
                     exp = Expansions.objects.get(id=expansion[0])
                     if exp.name == "Most Wanted Expansion Pack":
-                        print("adding extra")
                         ship_query = Ships.objects.all().filter(Q(expansion=expansion[0])|Q(name="Firespray-31")|Q(name="HWK-290"))
-                        print(ship_query)
 
                     for ship in ship_query:
                         ships.append({'name':ship.name, 'faction':ship.faction, 'quantity':ship.quantity*expansion[1], 'altFaction':ship.altFaction})

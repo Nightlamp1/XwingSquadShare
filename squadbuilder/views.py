@@ -119,13 +119,16 @@ def squadbuilder(request):
             bonus_query = UpgradeBonus.objects.all()
             for bonus in bonus_query:
                 if bonus.upgrade in upgrade_bonus:
-                    upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
-                else:
-                    upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[bonus.bonus.name]}#here add type
+                    upgrade_bonus[bonus.upgrade]['bonus'].append([bonus.bonus.name,bonus.bonus_type])
                     if bonus.bonus_quantity > 1:
                         for item in range(1,bonus.bonus_quantity):
-                            upgrade_bonus[bonus.upgrade]['bonus'].append(bonus.bonus.name)
-                            
+                            upgrade_bonus[bonus.upgrade]['bonus'].append([bonus.bonus.name,bonus.bonus_type])
+                else:
+                    upgrade_bonus[bonus.upgrade]={'type':bonus.bonus_type, 'quantity':bonus.bonus_quantity, 'bonus':[[bonus.bonus.name,bonus.bonus_type]]}#here add type
+                    if bonus.bonus_quantity > 1:
+                        for item in range(1,bonus.bonus_quantity):
+                            upgrade_bonus[bonus.upgrade]['bonus'].append([bonus.bonus.name,bonus.bonus_type])
+
                 
             return render(request, 'squadbuilder/builder.html',{'ships':ship_objects,'upgrades':json.dumps(upgradeList),
                                                                 'pilotCost':json.dumps(pilotCostDict),

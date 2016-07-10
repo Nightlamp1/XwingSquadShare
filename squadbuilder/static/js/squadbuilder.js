@@ -292,8 +292,21 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 		pilotUpgradeList.push(upgrades[pilot][i]);
 	}
 	if(isBonus){
+		
 		for(i=0;i<bonusArray.length; i++){
-			pilotUpgradeList.push(bonusArray[i]);//bonusArray[i][0] will be the bonus, bonusArray[i][1] will be the type
+			if(bonusArray[i][1]=="remove"){
+				console.log("this will be removed");
+				console.log(pilotUpgradeList);
+				var upgrade_index = pilotUpgradeList.indexOf(bonusArray[i][0]);
+				if (upgrade_index >= 0){
+					pilotUpgradeList.splice(upgrade_index,1);
+					console.log(pilotUpgradeList);
+				}
+			}
+			else{
+				pilotUpgradeList.push(bonusArray[i][0]);	
+			}
+			//bonusArray[i][0] will be the bonus, bonusArray[i][1] will be the type
 		}
 	}
 	for (i=0; i<pilotUpgradeList.length; i++){
@@ -319,8 +332,6 @@ function generateUpgradeHtml(pilot,isBonus,bonusArray){
 			}
 			var restricted = isRestriction(pilot,upgradeCardArray[j]);
 			if(!restricted){
-				console.log(pilotUpgradeList[i]);
-				console.log(selected);
 				if(upgradeCardList[pilotUpgradeList[i].replace(/\s/g,"")][upgradeCardArray[j]]['quantity']>0){
 					htmlString+= ("<li id="+upgradeCardArray[j].replace(/\s/g,"--")+ "><a class='upgrade' id=" + selected + ">" + upgradeCardArray[j] + "</a></li>");
 				}

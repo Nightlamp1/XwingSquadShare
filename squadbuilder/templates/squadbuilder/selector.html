@@ -14,29 +14,296 @@
 	  </h4>
 </div>
 <div id="collapsetest" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" aria-expanded="true">
-	{% for wave in waves%}
-	<h3> {{wave.0}} </h3>
-		{% for expansion in expansions %}
-		{% if expansion.wave == wave.0 %}
-			<div class="list-group" style="position:relative">
-				<div class="btn-group" data-toggle="buttons">
-					<label >
-						<span style="float:left">{{expansion.name}}:</span>
-						<span class="form-group-sm" style="float:right">
-						  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
-							<option value="0">0</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-						  </select>
-						</span>
-					</label>
+	
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-4">
+				<h3>{{waves.0.0}}</h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.0.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span>{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
 				</div>
+				{% endif %}
+				{% endfor %}
 			</div>
-		{% endif %}
-		{% endfor %}
-	{% endfor %}
+			<div class="col-sm-4">
+				<h3> {{waves.1.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.1.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span>{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.2.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.2.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span>{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-4">
+				<h3> {{waves.3.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.3.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.4.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.4.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.5.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.5.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-4">
+				<h3> {{waves.6.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.6.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.7.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.7.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.8.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.8.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-sm-4">
+				<h3> {{waves.9.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.9.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.10.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.10.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				<h3> {{waves.11.0}} </h3>
+				{% for expansion in expansions %}
+				{% if expansion.wave == waves.11.0 %}
+				<div class="list-group" style="position:relative">
+					<div class="btn-group" data-toggle="buttons">
+						<label >
+							<span >{{expansion.name}}:</span>
+							<span class="form-group-sm" style="float:right">
+							  <select class="expansion-qty" id="{{expansion.id}}select" name="{{expansion.id}}">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							  </select>
+							</span>
+						</label>
+					</div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 	
 	<form method="POST">{% csrf_token %}
 	<input type="hidden" name="expansionCode222" value="">
